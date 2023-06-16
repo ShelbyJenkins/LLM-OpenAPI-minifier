@@ -1,0 +1,15 @@
+Infrastructure
+0getlocations0
+Virtual Machine Images
+1getimages0getimagesforfamily1deleteimagesforfamily2createimage3updateimage4getimage5deleteimage6
+Metrics
+2getmetrics0
+Workloads
+3getworkloads0
+4createworkload0
+5getworkload0deleteworkload1
+6updateworkload0
+Instances
+7getworkloadinstances0getworkloadinstance1restartinstance2
+Instance Logs
+8getlogs0
