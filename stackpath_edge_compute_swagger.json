@@ -1,1 +1,3491 @@
-{"openapi":"3.0.0","info":{"title":"Edge Compute","version":"1.0.0","contact":{"name":"StackPath Support","url":"https://support.stackpath.com/"}},"paths":{"/workload/v1/locations":{"get":{"summary":"Get compute locations","operationId":"GetLocations","responses":{"200":{"description":"","content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1GetLocationsResponse"}}}},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"page_request.first","description":"The number of items desired.","in":"query","required":false,"schema":{"type":"string"}},{"name":"page_request.after","description":"The cursor value after which data will be returned.","in":"query","required":false,"schema":{"type":"string"}},{"name":"page_request.filter","description":"SQL-style constraint filters.","in":"query","required":false,"schema":{"type":"string"}},{"name":"page_request.sort_by","description":"Sort the response by the given field.","in":"query","required":false,"schema":{"type":"string"}}],"tags":["Infrastructure"],"description":"Retrieve information about the StackPath edge network that can host a compute workload"}},"/workload/v1/stacks/{stack_id}/images":{"get":{"summary":"Get all images","description":"Only non-deprecated images are returned by default","operationId":"GetImages","responses":{"200":{"description":"","content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1GetImagesResponse"}}}},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}},{"name":"page_request.first","description":"The number of items desired.","in":"query","required":false,"schema":{"type":"string"}},{"name":"page_request.after","description":"The cursor value after which data will be returned.","in":"query","required":false,"schema":{"type":"string"}},{"name":"page_request.filter","description":"SQL-style constraint filters.","in":"query","required":false,"schema":{"type":"string"}},{"name":"page_request.sort_by","description":"Sort the response by the given field.","in":"query","required":false,"schema":{"type":"string"}},{"name":"deprecated","description":"If present and true, include deprecated images in the result.","in":"query","required":false,"schema":{"type":"boolean","format":"boolean"}}],"tags":["Virtual Machine Images"]}},"/workload/v1/stacks/{stack_id}/images/{image_family}":{"get":{"summary":"Get a family's images","description":"Only non-deprecated images are returned by default. This will not error but instead return an empty list if the family is not found.","operationId":"GetImagesForFamily","responses":{"200":{"description":"","content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1GetImagesForFamilyResponse"}}}},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}},{"name":"image_family","description":"An image family","in":"path","required":true,"schema":{"type":"string"}},{"name":"page_request.first","description":"The number of items desired.","in":"query","required":false,"schema":{"type":"string"}},{"name":"page_request.after","description":"The cursor value after which data will be returned.","in":"query","required":false,"schema":{"type":"string"}},{"name":"page_request.filter","description":"SQL-style constraint filters.","in":"query","required":false,"schema":{"type":"string"}},{"name":"page_request.sort_by","description":"Sort the response by the given field.","in":"query","required":false,"schema":{"type":"string"}},{"name":"deprecated","description":"If present and true, include deprecated images in the result.","in":"query","required":false,"schema":{"type":"boolean","format":"boolean"}}],"tags":["Virtual Machine Images"]},"delete":{"summary":"Delete a family's images","description":"","operationId":"DeleteImagesForFamily","responses":{"204":{"description":"No content"},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}},{"name":"image_family","description":"An image family","in":"path","required":true,"schema":{"type":"string"}}],"tags":["Virtual Machine Images"]}},"/workload/v1/stacks/{stack_id}/images/{image_family}/{image_tag}":{"post":{"summary":"Create an image","operationId":"CreateImage","responses":{"200":{"description":"","content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1CreateImageResponse"}}}},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}},{"name":"image_family","description":"The image's family","in":"path","required":true,"schema":{"type":"string"}},{"name":"image_tag","description":"The image's tag","in":"path","required":true,"schema":{"type":"string"}}],"requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1CreateImageRequest"}}},"required":true},"tags":["Virtual Machine Images"]},"patch":{"summary":"Update an image","description":"Only metadata and description can be updated. The metadata, if set, replaces the entire existing metadata set. The tag cannot be \"default\".","operationId":"UpdateImage","responses":{"200":{"description":"","content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1UpdateImageResponse"}}}},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}},{"name":"image_family","description":"An image's family!","in":"path","required":true,"schema":{"type":"string"}},{"name":"image_tag","description":"An image's tag!","in":"path","required":true,"schema":{"type":"string"}}],"requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1UpdateImageRequest"}}},"required":true},"tags":["Virtual Machine Images"]},"get":{"summary":"Get an image","description":"","operationId":"GetImage","responses":{"200":{"description":"","content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1GetImageResponse"}}}},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}},{"name":"image_family","description":"An image family","in":"path","required":true,"schema":{"type":"string"}},{"name":"image_tag","description":"An image tag","in":"path","required":true,"schema":{"type":"string","default":"default"}}],"tags":["Virtual Machine Images"]},"delete":{"summary":"Delete an image","operationId":"DeleteImage","responses":{"204":{"description":"No content"},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}},{"name":"image_family","description":"An image's family","in":"path","required":true,"schema":{"type":"string"}},{"name":"image_tag","description":"An image's tag","in":"path","required":true,"schema":{"type":"string"}}],"tags":["Virtual Machine Images"]}},"/workload/v1/stacks/{stack_id}/images/{image_family}/{image_tag}/deprecation":{"put":{"summary":"Update deprecation settings","description":"This replaces an image's deprecation settings, so it can also undeprecate an image.","operationId":"UpdateImageDeprecation","responses":{"200":{"description":"","content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1UpdateImageDeprecationResponse"}}}},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}},{"name":"image_family","description":"An image family","in":"path","required":true,"schema":{"type":"string"}},{"name":"image_tag","description":"An image tag","in":"path","required":true,"schema":{"type":"string"}}],"requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1ImageDeprecation"}}},"required":true},"tags":["Virtual Machine Images"]}},"/workload/v1/stacks/{stack_id}/metrics":{"get":{"summary":"Get metrics","operationId":"GetMetrics","responses":{"200":{"description":"","content":{"application/json":{"schema":{"$ref":"#/components/schemas/prometheusMetrics"}}}},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}},{"name":"workload_id","description":"An EdgeCompute workload ID","in":"query","required":false,"schema":{"type":"string"}},{"name":"start_date","description":"A lower bound date to search metrics for.","in":"query","required":false,"schema":{"type":"string","format":"date-time"}},{"name":"end_date","description":"An upper bound date to search metrics for.","in":"query","required":false,"schema":{"type":"string","format":"date-time"}},{"name":"type","in":"query","required":false,"schema":{"type":"string","enum":["BANDWIDTH","INSTANCE"],"default":"BANDWIDTH"}},{"name":"granularity","in":"query","required":false,"schema":{"type":"string","enum":["DEFAULT","PT5M","PT1H","P1D","PT1M"],"default":"DEFAULT"}},{"name":"instance_name","description":"An instance name within a workload to filter metrics for","in":"query","required":false,"schema":{"type":"string"}},{"name":"pop","description":"A StackPath POP to filter traffic metrics for. This field does not apply when retrieving INSTANCE type metrics","in":"query","required":false,"schema":{"type":"string"}},{"name":"region","in":"query","required":false,"schema":{"type":"string","enum":["ALL","LOCAL_NODE","LOCAL_POP","NORTH_AMERICA","EUROPE","ASIA","OCEANIA","SOUTH_AMERICA","MARKETPLACE","INTERNAL","INTERNET"],"default":"ALL"}},{"name":"group_by","in":"query","required":false,"schema":{"type":"string","enum":["NONE","INSTANCE_NAME"],"default":"NONE"}},{"name":"grouping","description":"List of fields to group by.","in":"query","required":false,"schema":{"type":"array","items":{"type":"string"}}}],"tags":["Metrics"],"description":"Retrieve usage metrics for all workloads in a stack, a specific workload, or a specific instance in a workload"}},"/workload/v1/stacks/{stack_id}/workloads":{"get":{"summary":"Get all workloads","operationId":"GetWorkloads","responses":{"200":{"description":"","content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1GetWorkloadsResponse"}}}},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}},{"name":"page_request.first","description":"The number of items desired.","in":"query","required":false,"schema":{"type":"string"}},{"name":"page_request.after","description":"The cursor value after which data will be returned.","in":"query","required":false,"schema":{"type":"string"}},{"name":"page_request.filter","description":"SQL-style constraint filters.","in":"query","required":false,"schema":{"type":"string"}},{"name":"page_request.sort_by","description":"Sort the response by the given field.","in":"query","required":false,"schema":{"type":"string"}}],"tags":["Workloads"]},"post":{"summary":"Create a workload","operationId":"CreateWorkload","responses":{"200":{"description":"","content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1CreateWorkloadResponse"}}}},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}}],"requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1CreateWorkloadRequest"}}},"required":true},"tags":["Workloads"]}},"/workload/v1/stacks/{stack_id}/workloads/{workload_id}":{"get":{"summary":"Get a workload","operationId":"GetWorkload","responses":{"200":{"description":"","content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1GetWorkloadResponse"}}}},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}},{"name":"workload_id","description":"An EdgeCompute workload ID","in":"path","required":true,"schema":{"type":"string"}}],"tags":["Workloads"]},"delete":{"summary":"Delete a workload","operationId":"DeleteWorkload","responses":{"204":{"description":"No content"},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}},{"name":"workload_id","description":"An EdgeCompute workload ID","in":"path","required":true,"schema":{"type":"string"}}],"tags":["Workloads"]},"patch":{"summary":"Update a workload","operationId":"UpdateWorkload","responses":{"200":{"description":"","content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1UpdateWorkloadResponse"}}}},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}},{"name":"workload_id","description":"An EdgeCompute workload ID","in":"path","required":true,"schema":{"type":"string"}}],"requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1UpdateWorkloadRequest"}}},"required":true},"tags":["Workloads"]}},"/workload/v1/stacks/{stack_id}/workloads/{workload_id}/instances":{"get":{"summary":"Get all workload instances","operationId":"GetWorkloadInstances","responses":{"200":{"description":"","content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1GetWorkloadInstancesResponse"}}}},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}},{"name":"workload_id","description":"An EdgeCompute workload ID","in":"path","required":true,"schema":{"type":"string"}},{"name":"page_request.first","description":"The number of items desired.","in":"query","required":false,"schema":{"type":"string"}},{"name":"page_request.after","description":"The cursor value after which data will be returned.","in":"query","required":false,"schema":{"type":"string"}},{"name":"page_request.filter","description":"SQL-style constraint filters.","in":"query","required":false,"schema":{"type":"string"}},{"name":"page_request.sort_by","description":"Sort the response by the given field.","in":"query","required":false,"schema":{"type":"string"}}],"tags":["Instances"]}},"/workload/v1/stacks/{stack_id}/workloads/{workload_id}/instances/{instance_name}":{"get":{"summary":"Get a workload instance","operationId":"GetWorkloadInstance","responses":{"200":{"description":"","content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1GetWorkloadInstanceResponse"}}}},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}},{"name":"workload_id","description":"An EdgeCompute workload ID","in":"path","required":true,"schema":{"type":"string"}},{"name":"instance_name","description":"An EdgeCompute workload instance name","in":"path","required":true,"schema":{"type":"string"}}],"tags":["Instances"]}},"/workload/v1/stacks/{stack_id}/workloads/{workload_id}/instances/{instance_name}/logs":{"get":{"summary":"Get log stream","description":"Retrieve a stream of logs generated by a workload instance's containers. Logs are generated by the containers and are not modified by StackPath. Log contents vary by the application running in the container, though many containerized applications are configured to log to STDOUT and STDERR.","operationId":"GetLogs","responses":{"200":{"description":"(streaming responses)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/v1LogChunk"}}}},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","description":"A stack ID or slug","in":"path","required":true,"schema":{"type":"string"}},{"name":"workload_id","description":"An EdgeCompute workload ID","in":"path","required":true,"schema":{"type":"string"}},{"name":"instance_name","description":"An EdgeCompute workload instance name","in":"path","required":true,"schema":{"type":"string"}},{"name":"container_name","description":"The name of the container to obtain logs for. This defaults to first container in the instance.","in":"query","required":false,"schema":{"type":"string"}},{"name":"follow","description":"Whether or not to follow the instance's log stream. This defaults to false.","in":"query","required":false,"schema":{"type":"boolean","format":"boolean"}},{"name":"previous","description":"Whether or not to return log entries made by previously terminated containers. This defaults to false.","in":"query","required":false,"schema":{"type":"boolean","format":"boolean"}},{"name":"since_seconds","description":"A relative time in seconds before the current time from which to show logs. If this value precedes the time an instance was started, only logs since the instance's start time will be returned. If this value is in the future, no logs will be returned.\n\nOnly one of since_seconds or since_time may be specified","in":"query","required":false,"schema":{"type":"string"}},{"name":"since_time","description":"An RFC3339 timestamp from which to show logs. If this value precedes the time an instance was started, only logs since the instance's start time will be returned. If this value is in the future, no logs will be returned.\n\nOnly one of since_seconds or since_time may be specified","in":"query","required":false,"schema":{"type":"string","format":"date-time"}},{"name":"timestamps","description":"Whether or not to add an RFC3339 or RFC3339Nano timestamp at the beginning of every line of log output. This defaults to false.","in":"query","required":false,"schema":{"type":"boolean","format":"boolean"}},{"name":"tail_lines","description":"The number of lines from the end of the logs to show. If not specified, logs are shown from the creation of the container or since_seconds or since_time.","in":"query","required":false,"schema":{"type":"string"}},{"name":"limit_bytes","description":"The number of bytes to read from the server before terminating log output. This may not display a complete final line of logging, and may return slightly more or slightly less than the specified limit.","in":"query","required":false,"schema":{"type":"string"}}],"tags":["Instance Logs"]}},"/workload/v1/stacks/{stack_id}/workloads/{workload_id}/instances/{instance_name}/power/restart":{"post":{"summary":"Restart a workload instance","description":"The action is performed asynchronously and a successful response does not mean the instance has restarted yet.","operationId":"RestartInstance","responses":{"204":{"description":"No content"},"401":{"description":"Returned when an unauthorized request is attempted.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"500":{"description":"Internal server error.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}},"default":{"description":"Default error structure.","content":{"application/json":{"schema":{"$ref":"#/components/schemas/stackpathapiStatus"}}}}},"parameters":[{"name":"stack_id","in":"path","required":true,"description":"A stack ID or slug","schema":{"type":"string"}},{"name":"workload_id","in":"path","required":true,"description":"An EdgeCompute workload ID","schema":{"type":"string"}},{"name":"instance_name","in":"path","required":true,"description":"An EdgeCompute workload instance name","schema":{"type":"string"}}],"tags":["Instances"]}}},"security":[{"oauth2":[]}],"externalDocs":{"description":"The StackPath API Reference","url":"https://stackpath.dev/reference"},"x-explorer-enabled":true,"x-proxy-enabled":true,"x-samples-enabled":true,"x-samples-languages":["curl","node","ruby","javascript","python"],"servers":[{"url":"https://gateway.stackpath.com"}],"components":{"securitySchemes":{"oauth2":{"type":"oauth2","flows":{"clientCredentials":{"tokenUrl":"https://gateway.stackpath.com/identity/v1/oauth2/token","scopes":{}}}}},"schemas":{"ContainerStatusRunning":{"type":"object","properties":{"startedAt":{"type":"string","format":"date-time","description":"The date a container started"}},"description":"Properties related to running containers"},"ContainerStatusTerminated":{"type":"object","properties":{"exitCode":{"type":"integer","format":"int32","description":"The exit code of the command that started the container"},"reason":{"type":"string","description":"The reason a container terminated"},"message":{"type":"string","description":"A more detailed explanation of a container's termination"},"startedAt":{"type":"string","format":"date-time","description":"The date a container started"},"finishedAt":{"type":"string","format":"date-time","description":"The date a container terminated"}},"description":"Properties related to terminated containers"},"ContainerStatusWaiting":{"type":"object","properties":{"reason":{"type":"string","description":"The reason that a container is waiting to start"},"message":{"type":"string","description":"A more detailed explanation of a container's waiting state"}},"description":"Properties related to containers that are starting up"},"DataMatrix":{"type":"object","properties":{"results":{"type":"array","items":{"$ref":"#/components/schemas/DataMatrixResult"},"description":"A data point's value"}},"description":"A set of time series containing a range of data points over time for each time series"},"DataMatrixResult":{"type":"object","properties":{"metric":{"type":"object","additionalProperties":{"type":"string"},"description":"The data points' labels"},"values":{"type":"array","items":{"$ref":"#/components/schemas/DataValue"},"description":"Time series data point values"}},"description":"Time series containing a range of data points over time for each time series"},"DataValue":{"type":"object","properties":{"unixTime":{"type":"string","description":"The time that a data point was recorded"},"value":{"type":"string","description":"A data point's value"}},"description":"An individual metric data point"},"DataVector":{"type":"object","properties":{"results":{"type":"array","items":{"$ref":"#/components/schemas/DataVectorResult"},"description":"A data point's value"}},"description":"A set of time series containing a single sample for each time series, all sharing the same timestamp"},"DataVectorResult":{"type":"object","properties":{"metric":{"type":"object","additionalProperties":{"type":"string"},"description":"The data points' labels"},"value":{"$ref":"#/components/schemas/DataValue"}},"description":"Time series containing a single sample for each time series, all sharing the same timestamp"},"MetricsData":{"type":"object","properties":{"matrix":{"$ref":"#/components/schemas/DataMatrix"},"vector":{"$ref":"#/components/schemas/DataVector"}},"description":"The data points in a metrics collection"},"VirtualMachineStatusPhase":{"type":"string","enum":["UNKNOWN","PENDING","SCHEDULING","STARTING","RUNNING","STOPPED","FAILED"],"default":"UNKNOWN"},"VolumeClaimVolumeClaimPhase":{"type":"string","enum":["VOLUME_CLAIM_PHASE_UNSPECIFIED","PENDING","UNBOUND","BOUND"],"default":"VOLUME_CLAIM_PHASE_UNSPECIFIED","description":"Which phase a volume claim is currently in\n\n- VOLUME_CLAIM_PHASE_UNSPECIFIED: StackPath is unable to determine the volume claim's state\n - PENDING: The volume claim is pending\n - UNBOUND: The volume claim is unbound\n - BOUND: The volume claim is bound to an instance"},"apiStatusDetail":{"type":"object","properties":{"@type":{"type":"string"}},"required":["@type"],"discriminator":{"propertyName":"@type"}},"paginationPageInfo":{"type":"object","properties":{"totalCount":{"type":"string","description":"The total number of items in the dataset"},"hasPreviousPage":{"type":"boolean","format":"boolean","description":"Whether or not a previous page of data exists"},"hasNextPage":{"type":"boolean","format":"boolean","description":"Whether or not another page of data is available"},"startCursor":{"type":"string","description":"The cursor for the first item in the set of data returned"},"endCursor":{"type":"string","description":"The cursor for the last item in the set of data returned"}},"description":"Information about a paginated response\n\nThis is modeled after the GraphQL Relay spec to support both cursor based pagination and traditional offset based pagination."},"prometheusMetrics":{"type":"object","properties":{"status":{"$ref":"#/components/schemas/prometheusMetricsStatus"},"data":{"$ref":"#/components/schemas/MetricsData"},"errorType":{"type":"string","description":"The type of error encountered when querying for metrics"},"error":{"type":"string","description":"The error encountered when querying for metrics"},"warnings":{"type":"array","items":{"type":"string"},"description":"Warnings encountered when querying for metrics"}},"description":"A collection of metrics"},"prometheusMetricsStatus":{"type":"string","enum":["SUCCESS","ERROR"],"default":"SUCCESS","description":"A metrics query's resulting status"},"stackpath.rpc.BadRequest":{"allOf":[{"$ref":"#/components/schemas/apiStatusDetail"},{"type":"object","properties":{"fieldViolations":{"type":"array","items":{"$ref":"#/components/schemas/stackpath.rpc.BadRequest.FieldViolation"}}}}]},"stackpath.rpc.BadRequest.FieldViolation":{"type":"object","properties":{"field":{"type":"string"},"description":{"type":"string"}}},"stackpath.rpc.Help":{"allOf":[{"$ref":"#/components/schemas/apiStatusDetail"},{"type":"object","properties":{"links":{"type":"array","items":{"$ref":"#/components/schemas/stackpath.rpc.Help.Link"}}}}]},"stackpath.rpc.Help.Link":{"type":"object","properties":{"description":{"type":"string"},"url":{"type":"string"}}},"stackpath.rpc.LocalizedMessage":{"allOf":[{"$ref":"#/components/schemas/apiStatusDetail"},{"type":"object","properties":{"locale":{"type":"string"},"message":{"type":"string"}}}]},"stackpath.rpc.PreconditionFailure":{"allOf":[{"$ref":"#/components/schemas/apiStatusDetail"},{"type":"object","properties":{"violations":{"type":"array","items":{"$ref":"#/components/schemas/stackpath.rpc.PreconditionFailure.Violation"}}}}]},"stackpath.rpc.PreconditionFailure.Violation":{"type":"object","properties":{"type":{"type":"string"},"subject":{"type":"string"},"description":{"type":"string"}}},"stackpath.rpc.QuotaFailure":{"allOf":[{"$ref":"#/components/schemas/apiStatusDetail"},{"type":"object","properties":{"violations":{"type":"array","items":{"$ref":"#/components/schemas/stackpath.rpc.QuotaFailure.Violation"}}}}]},"stackpath.rpc.QuotaFailure.Violation":{"type":"object","properties":{"subject":{"type":"string"},"description":{"type":"string"}}},"stackpath.rpc.RequestInfo":{"allOf":[{"$ref":"#/components/schemas/apiStatusDetail"},{"type":"object","properties":{"requestId":{"type":"string"},"servingData":{"type":"string"}}}]},"stackpath.rpc.ResourceInfo":{"allOf":[{"$ref":"#/components/schemas/apiStatusDetail"},{"type":"object","properties":{"resourceType":{"type":"string"},"resourceName":{"type":"string"},"owner":{"type":"string"},"description":{"type":"string"}}}]},"stackpath.rpc.RetryInfo":{"allOf":[{"$ref":"#/components/schemas/apiStatusDetail"},{"type":"object","properties":{"retryDelay":{"type":"string"}}}]},"stackpathapiStatus":{"type":"object","properties":{"code":{"type":"integer","format":"int32"},"details":{"type":"array","items":{"$ref":"#/components/schemas/apiStatusDetail"}},"message":{"type":"string"}}},"v1ContainerSpec":{"type":"object","properties":{"image":{"type":"string","description":"The location of a Docker image to run as a container"},"command":{"type":"array","items":{"type":"string"},"description":"The commands that start a container"},"env":{"$ref":"#/components/schemas/v1EnvironmentVariableMapEntry"},"ports":{"$ref":"#/components/schemas/v1InstancePortMapEntry"},"livenessProbe":{"$ref":"#/components/schemas/v1Probe"},"readinessProbe":{"$ref":"#/components/schemas/v1Probe"},"resources":{"$ref":"#/components/schemas/v1ResourceRequirements"},"volumeMounts":{"type":"array","items":{"$ref":"#/components/schemas/v1InstanceVolumeMount"},"description":"Volumes to mount in the container"}},"description":"The specification for the desired state of a container in a workload"},"v1ContainerSpecMapEntry":{"type":"object","additionalProperties":{"$ref":"#/components/schemas/v1ContainerSpec"},"description":"A string to container configuration key/value pair"},"v1ContainerStatus":{"type":"object","properties":{"name":{"type":"string","description":"A container status' name"},"phase":{"$ref":"#/components/schemas/v1ContainerStatusContainerPhase"},"startedAt":{"type":"string","format":"date-time","description":"The date a container started"},"finishedAt":{"type":"string","format":"date-time","description":"The date a container terminated"},"waiting":{"$ref":"#/components/schemas/ContainerStatusWaiting"},"running":{"$ref":"#/components/schemas/ContainerStatusRunning"},"terminated":{"$ref":"#/components/schemas/ContainerStatusTerminated"},"ready":{"type":"boolean","format":"boolean","description":"Whether or not a container is running and ready for service"},"restartCount":{"type":"integer","format":"int32","description":"How many times a container has restarted since it was first started"},"containerId":{"type":"string","description":"A unique value that identifies a container"}},"description":"The status of a container in a workload"},"v1ContainerStatusContainerPhase":{"type":"string","enum":["CONTAINER_PHASE_UNSPECIFIED","STARTING","RUNNING","FAILED","STOPPED"],"default":"CONTAINER_PHASE_UNSPECIFIED","description":"Which phase of runtime a container is currently in\n\n- CONTAINER_PHASE_UNSPECIFIED: The container has not reported a state back or StackPath is unable to determine the container's state\n - STARTING: The container is starting up\n - RUNNING: The container is running\n - FAILED: The container has terminated due to a failure\n - STOPPED: The container was terminated by the user"},"v1CreateImageRequest":{"type":"object","properties":{"image":{"$ref":"#/components/schemas/v1Image"},"instanceVolumeSource":{"$ref":"#/components/schemas/v1ImageSourceInstanceVolume"}},"title":""},"v1CreateImageResponse":{"type":"object","properties":{"image":{"$ref":"#/components/schemas/v1Image"}},"description":"A response from a request to create an image"},"v1CreateWorkloadRequest":{"type":"object","properties":{"workload":{"$ref":"#/components/schemas/v1Workload"}},"title":""},"v1CreateWorkloadResponse":{"type":"object","properties":{"workload":{"$ref":"#/components/schemas/v1Workload"}},"description":"A response from a request to add a workload to a stack"},"v1DeploymentSpec":{"type":"object","properties":{"minReplicas":{"type":"integer","format":"int32","description":"The minimum number of instances in a deployment"},"maxReplicas":{"type":"integer","format":"int32","description":"The maximum number of instances in a deployment"},"scaleSettings":{"$ref":"#/components/schemas/v1ScaleSettings"},"selectors":{"type":"array","items":{"$ref":"#/components/schemas/v1MatchExpression"},"description":"A collection of filters that match the deployment's scope"}},"description":"A deployment's specification"},"v1DockerRegistryCredentials":{"type":"object","properties":{"server":{"type":"string","description":"The server that the credentials should be used with\n\nThe server that the credentials should be used with. This value will default to the docker hub registry when not set."},"username":{"type":"string","description":"The username that should be used for authenticate the image pull"},"password":{"type":"string","description":"The password that should be used to authenticate the image pull"},"email":{"type":"string","description":"The email address to use for the docker registry account"}},"description":"The authentication configuration that should be used to pull images from a docker registry"},"v1EnvironmentVariable":{"type":"object","properties":{"value":{"type":"string","description":"An environment variable's value"},"secretValue":{"type":"string","description":"A sensitive environment variable that should not be exposed"}},"description":"The location to obtain a value for an environment variable"},"v1EnvironmentVariableMapEntry":{"type":"object","additionalProperties":{"$ref":"#/components/schemas/v1EnvironmentVariable"},"description":"A string to environment variable key/value pair"},"v1GetImageResponse":{"type":"object","properties":{"image":{"$ref":"#/components/schemas/v1Image"}},"description":"A response from a request to retrieve an individual image"},"v1GetImagesForFamilyResponse":{"type":"object","properties":{"pageInfo":{"$ref":"#/components/schemas/paginationPageInfo"},"results":{"type":"array","items":{"$ref":"#/components/schemas/v1Image"},"description":"The requested images"}},"description":"A response from a request to retrieve images by a family"},"v1GetImagesResponse":{"type":"object","properties":{"pageInfo":{"$ref":"#/components/schemas/paginationPageInfo"},"results":{"type":"array","items":{"$ref":"#/components/schemas/v1Image"},"description":"The requested images"}},"description":"A response from a request to retrieve images for a stack"},"v1GetLocationsResponse":{"type":"object","properties":{"pageInfo":{"$ref":"#/components/schemas/paginationPageInfo"},"results":{"type":"array","items":{"$ref":"#/components/schemas/workloadv1Location"},"description":"The requested locations"}},"description":"A response from a request to retrieve the locations a workload may be created at"},"v1GetWorkloadInstanceResponse":{"type":"object","properties":{"instance":{"$ref":"#/components/schemas/workloadv1Instance"}},"description":"A response from a request to retrieve a workload's instances"},"v1GetWorkloadInstancesResponse":{"type":"object","properties":{"pageInfo":{"$ref":"#/components/schemas/paginationPageInfo"},"results":{"type":"array","items":{"$ref":"#/components/schemas/workloadv1Instance"},"description":"The requested workload instances"}},"description":"A response from a request to retrieve a workload's instances"},"v1GetWorkloadResponse":{"type":"object","properties":{"workload":{"$ref":"#/components/schemas/v1Workload"}},"description":"A response from a request to retrieve an individual workload"},"v1GetWorkloadsResponse":{"type":"object","properties":{"pageInfo":{"$ref":"#/components/schemas/paginationPageInfo"},"results":{"type":"array","items":{"$ref":"#/components/schemas/v1Workload"},"description":"The requested workloads"}},"description":"A response from a request to retrieve a stack's workloads"},"v1HTTPGetAction":{"type":"object","properties":{"path":{"type":"string","description":"The path portion of the URL to request"},"port":{"type":"integer","format":"int32","description":"The TCP port to query in the HTTP request"},"scheme":{"type":"string","description":"HTTP scheme to use in the HTTP request"},"httpHeaders":{"$ref":"#/components/schemas/v1StringMapEntry"}},"description":"Execute an HTTP GET request against an endpoint running on an instance"},"v1Image":{"type":"object","properties":{"stackId":{"type":"string","readOnly":true,"description":"The ID of the stack that an image belongs to"},"id":{"type":"string","readOnly":true,"description":"An image's unique identifier"},"family":{"type":"string","description":"An image's family\n\nFamilies are logical groupings of images"},"tag":{"type":"string","description":"The image's tag\n\nImage tags are akin to versions"},"metadata":{"$ref":"#/components/schemas/v1ImageMetadata"},"description":{"type":"string","description":"An image's description\n\nThis is optional and may not be more than 1,000 characters"},"status":{"$ref":"#/components/schemas/v1ImageStatus"},"imageSize":{"type":"string","description":"An image's archive size in bytes\n\nThis is only available on ready images","readOnly":true},"volumeSize":{"type":"string","description":"An image's volume size in bytes\n\nThis is only available on ready images","readOnly":true},"deprecation":{"$ref":"#/components/schemas/v1ImageDeprecation"},"conditions":{"type":"array","items":{"$ref":"#/components/schemas/v1ImageCondition"},"readOnly":true,"description":"Details about an image's status"}},"description":"A virtual machine image"},"v1ImageCondition":{"type":"object","properties":{"type":{"type":"string","description":"Type of the condition"},"status":{"$ref":"#/components/schemas/v1ImageConditionStatus"},"checkedAt":{"type":"string","format":"date-time","description":"The last time the condition was checked"},"transitionedAt":{"type":"string","format":"date-time","description":"The last time the condition transitioned status"},"reason":{"type":"string","description":"A stable identifier for the reason the condition is in its current state"},"message":{"type":"string","description":"A human readable message with details regarding the condition"}},"description":"Further information about an image's status"},"v1ImageConditionStatus":{"type":"string","enum":["IMAGE_CONDITION_STATUS_UNKNOWN","TRUE","FALSE"],"default":"IMAGE_CONDITION_STATUS_UNKNOWN","description":"Which status an image is currently in\n\n- IMAGE_CONDITION_STATUS_UNKNOWN: The condition status is unknown\n - TRUE: The condition is true\n - FALSE: The condition is false"},"v1ImageDeprecation":{"type":"object","properties":{"deprecationDate":{"type":"string","format":"date-time","description":"The date when an image is considered deprecated\n\nDeprecated images may be used in new virtual machine based workloads, but are no longer considered for the \"default\" tag, nor are they returned in image lists by default."},"obsoletionDate":{"type":"string","format":"date-time","description":"The date when an image is considered obsolete\n\nObsolete images may not be used in new virtual machine based workloads. If an obsoletion date is present then the deprecation date must also be present with a same or earlier date."},"deletionDate":{"type":"string","format":"date-time","description":"The date when an image is deleted\n\nDeletion dates cannot be before an image's deprecation or obsoletion dates."}},"description":"An image's deprecation settings"},"v1ImageMetadata":{"type":"object","properties":{"annotations":{"$ref":"#/components/schemas/v1StringMapEntry"},"labels":{"$ref":"#/components/schemas/v1StringMapEntry"},"createdAt":{"type":"string","format":"date-time","description":"The date that a workload image was created\n\nThe date an image was created","readOnly":true,"nullable":true},"updatedAt":{"type":"string","format":"date-time","description":"The date that a workload image was last updated\n\nThe date an image was last updated","readOnly":true,"nullable":true}},"description":"An image's metadata"},"v1ImagePullCredential":{"type":"object","properties":{"dockerRegistry":{"$ref":"#/components/schemas/v1DockerRegistryCredentials"}},"description":"The credentials that should be used to pull the container image"},"v1ImageSourceInstanceVolume":{"type":"object","properties":{"workloadId":{"type":"string","description":"The ID or slug of the workload containing the instance to reference"},"instanceName":{"type":"string","description":"An instance's name to reference a volume on"},"volumeClaimSlug":{"type":"string","description":"A reference to the volume to create an image from or unset for the root volume"}},"description":"A reference to the volume of an instance to capture an image from"},"v1ImageStatus":{"type":"string","enum":["IMAGE_STATUS_UNKNOWN","PENDING","PROCESSING","READY","FAILED"],"default":"IMAGE_STATUS_UNKNOWN","description":"Which capture status an image is currently in\n\n- IMAGE_STATUS_UNKNOWN: The image status is unknown\n - PENDING: The image is pending creation\n - PROCESSING: The image is processing\n - READY: The image is ready\n - FAILED: The image failed to be created"},"v1InstancePort":{"type":"object","properties":{"port":{"type":"integer","format":"int32","description":"The network port"},"protocol":{"type":"string","description":"The network protocol for the port\n\nValues are either \"TCP\" or \"UDP\". Defaults to \"TCP\"."},"enableImplicitNetworkPolicy":{"type":"boolean","format":"boolean","description":"Allow the internet to connect to the port\n\nWhen true, this port will be given an implicit network policy of priority 65534 permitting 0.0.0.0/0 access to the port. This can be overridden by creating network policies of a higher priority to block the port."}},"description":"A named port for an instance of a workload"},"v1InstancePortMapEntry":{"type":"object","additionalProperties":{"$ref":"#/components/schemas/v1InstancePort"},"description":"A string to network port key/value pair"},"v1InstanceVolumeMount":{"type":"object","properties":{"slug":{"type":"string","description":"The slug of the volume claim to mount"},"mountPath":{"type":"string","description":"The path in an instance to mount a volume"}},"description":"Describes mounting a volume on containers or vms in an instance"},"v1LogChunk":{"type":"object","properties":{"bytes":{"type":"string","format":"byte","description":"Raw log contents"}},"description":"A chunk of raw log data"},"v1MatchExpression":{"type":"object","properties":{"key":{"type":"string","description":"The name of the selector to perform a match against"},"operator":{"type":"string","description":"The operation to perform to match a selector\n\nValid values are \"In\", \"NotIn\", \"Exists\", and \"DoesNotExist\"."},"values":{"type":"array","items":{"type":"string"},"description":"The values to match in the selector"}},"description":"An expression to match selectors against a set of values"},"v1Metadata":{"type":"object","properties":{"annotations":{"$ref":"#/components/schemas/v1StringMapEntry"},"labels":{"$ref":"#/components/schemas/v1StringMapEntry"},"createdAt":{"type":"string","format":"date-time","readOnly":true,"description":"The date that a metadata entry was created","nullable":true},"updatedAt":{"type":"string","format":"date-time","readOnly":true,"description":"The date that a metadata entry was last updated","nullable":true},"deleteRequestedAt":{"type":"string","format":"date-time","readOnly":true,"description":"The date an entity was requested to be deleted","nullable":true},"version":{"type":"string","description":"A metadata entry's version number\n\nMetadata versions start at 1 when they are created and increment by 1 every time they are updated."}},"description":"Metadata associated with an entity"},"v1MetricSpec":{"type":"object","properties":{"metric":{"type":"string","description":"The metric to measure against"},"averageValue":{"type":"string","description":"The target average value for the metric measured across all instances within a deployment, expressed as a quantity."},"averageUtilization":{"type":"integer","format":"int32","description":"The target average value for the metric measured across all instances within a deployment, expressed as a percentage of requested resources."}}},"v1NetworkInterface":{"type":"object","properties":{"network":{"type":"string","description":"A network interface's name"}},"description":"Network interfaces that will be created on instances in the workload"},"v1Probe":{"type":"object","properties":{"httpGet":{"$ref":"#/components/schemas/v1HTTPGetAction"},"tcpSocket":{"$ref":"#/components/schemas/v1TCPSocketAction"},"initialDelaySeconds":{"type":"integer","format":"int32","description":"The number of seconds after a workload instance has started before liveness probes are initiated"},"timeoutSeconds":{"type":"integer","format":"int32","description":"The number of seconds after which a probe times out\n\nDefaults to 1 second. Minimum value is 1."},"periodSeconds":{"type":"integer","format":"int32","description":"How often, in seconds, to perform a probe\n\nDefault to 10 seconds. Minimum value is 1."},"successThreshold":{"type":"integer","format":"int32","description":"The minimum consecutive successes for a probe to be considered successful after having failed\n\nDefaults to 1. Must be 1 for liveness. Minimum value is 1."},"failureThreshold":{"type":"integer","format":"int32","description":"The minimum consecutive failures for a probe to be considered failed after having succeeded\n\nDefaults to 3. Minimum value is 1."}},"description":"A health check probe against a workload instance to determine if it is alive or ready to receive traffic"},"v1ResourceRequirements":{"type":"object","properties":{"requests":{"$ref":"#/components/schemas/v1StringMapEntry"},"limits":{"$ref":"#/components/schemas/v1StringMapEntry"}},"description":"Resource requirements for an object\n\nResource requirements are key/value pairs."},"v1ScaleSettings":{"type":"object","properties":{"metrics":{"type":"array","items":{"$ref":"#/components/schemas/v1MetricSpec"},"description":"Metrics to observe for invoking scaling events."}}},"v1StringMapEntry":{"type":"object","additionalProperties":{"type":"string"},"description":"A string to string key/value pair"},"v1TCPSocketAction":{"type":"object","properties":{"port":{"type":"integer","format":"int32","description":"The TCP port to quert"}},"description":"Connect to an instance's TCP port"},"v1Target":{"type":"object","properties":{"spec":{"$ref":"#/components/schemas/v1TargetSpec"}},"description":"How instances in a workload should be deployed"},"v1TargetMapEntry":{"type":"object","additionalProperties":{"$ref":"#/components/schemas/v1Target"},"description":"A string to deployment target key/value pair"},"v1TargetSpec":{"type":"object","properties":{"deploymentScope":{"type":"string","description":"The scope at which a deployment should be created. Valid values are: \"cityCode\""},"deployments":{"$ref":"#/components/schemas/v1DeploymentSpec"}},"description":"The specification for a target"},"v1UpdateImageDeprecationResponse":{"type":"object","properties":{"image":{"$ref":"#/components/schemas/v1Image"}},"description":"A response from a request to update image deprecation settings"},"v1UpdateImageRequest":{"type":"object","properties":{"image":{"$ref":"#/components/schemas/v1Image"}},"title":""},"v1UpdateImageResponse":{"type":"object","properties":{"image":{"$ref":"#/components/schemas/v1Image"}},"description":"A response from a request to update an image"},"v1UpdateWorkloadRequest":{"type":"object","properties":{"workload":{"$ref":"#/components/schemas/v1Workload"}},"title":""},"v1UpdateWorkloadResponse":{"type":"object","properties":{"workload":{"$ref":"#/components/schemas/v1Workload"}},"description":"A response from a request to update a workload"},"v1VirtualMachineSpec":{"type":"object","properties":{"image":{"type":"string","description":"The image to use for the virtual machine\n\nThis is in the format of <stack-slug>/<image-family>[:<image-tag>]. If the image tag portion is omitted, 'default' is assumed which is the most recently created, ready, and non-deprecated image of that slug. A set of common images is present on the 'stackpath-edge' stack."},"userData":{"type":"string","format":"base64","description":"Base64 encoded cloud-init compatible user-data"},"ports":{"$ref":"#/components/schemas/v1InstancePortMapEntry"},"livenessProbe":{"$ref":"#/components/schemas/v1Probe"},"readinessProbe":{"$ref":"#/components/schemas/v1Probe"},"resources":{"$ref":"#/components/schemas/v1ResourceRequirements"},"volumeMounts":{"type":"array","items":{"$ref":"#/components/schemas/v1InstanceVolumeMount"},"description":"Volumes to mount in the virtual machine"}},"description":"The specification for the desired state of a virtual machine in a workload"},"v1VirtualMachineSpecMapEntry":{"type":"object","additionalProperties":{"$ref":"#/components/schemas/v1VirtualMachineSpec"},"description":"A string to virtual machine configuration key/value pair"},"v1VirtualMachineStatus":{"type":"object","properties":{"name":{"type":"string","description":"The name of the virtual machine the status applies to"},"phase":{"$ref":"#/components/schemas/VirtualMachineStatusPhase"},"reason":{"type":"string","description":"A short reason why the virtual machine is in its current phase"},"message":{"type":"string","description":"A longer message with details about why the virtual machine is in its current phase"}},"description":"The status of a Virtual Machine"},"v1VolumeClaim":{"type":"object","properties":{"stackId":{"type":"string","readOnly":true,"description":"The ID of the stack that a volume claim belongs to"},"id":{"type":"string","readOnly":true,"description":"A volume claim's unique identifier"},"name":{"type":"string","description":"A volume claim's name as it appears in the StackPath portal"},"slug":{"type":"string","description":"A volume claim's programmatic name\n\nVolume claim slugs are used to programatically label a claim"},"metadata":{"$ref":"#/components/schemas/v1Metadata"},"spec":{"$ref":"#/components/schemas/v1VolumeClaimSpec"},"phase":{"$ref":"#/components/schemas/VolumeClaimVolumeClaimPhase"}},"description":"A claim for a volume\n\nVolumes may be attached to workload instance containers or virtual machines"},"v1VolumeClaimSpec":{"type":"object","properties":{"resources":{"$ref":"#/components/schemas/v1ResourceRequirements"}},"description":"The specification for a volume claim"},"v1Workload":{"type":"object","properties":{"stackId":{"type":"string","readOnly":true,"description":"The ID of the stack that a workload belongs to"},"id":{"type":"string","readOnly":true,"description":"A workload's unique identifier"},"name":{"type":"string","description":"A workload's name as it appears in the StackPath portal"},"slug":{"type":"string","description":"A workload's programmatic name\n\nWorkload slugs are used to build its instances names"},"metadata":{"$ref":"#/components/schemas/v1Metadata"},"spec":{"$ref":"#/components/schemas/v1WorkloadSpec"},"targets":{"$ref":"#/components/schemas/v1TargetMapEntry"},"status":{"$ref":"#/components/schemas/v1WorkloadStatus"}},"description":"A computing workload\n\nWorkloads define a computing application to deploy to StackPath's edge network."},"v1WorkloadSpec":{"type":"object","properties":{"networkInterfaces":{"type":"array","items":{"$ref":"#/components/schemas/v1NetworkInterface"},"description":"Network interfaces to bind to the workload's instances"},"containers":{"$ref":"#/components/schemas/v1ContainerSpecMapEntry"},"virtualMachines":{"$ref":"#/components/schemas/v1VirtualMachineSpecMapEntry"},"volumeClaimTemplates":{"type":"array","items":{"$ref":"#/components/schemas/v1VolumeClaim"},"description":"A list of claims that instances may reference\n\nThe slug of the claim will be used in combination with the name of the instance to create a stable identifier. The slug should be used in the volume mount specifications for containers and VMs."},"imagePullCredentials":{"$ref":"#/components/schemas/v1WrappedImagePullCredentials"}},"description":"The specification for the desired state of a workload"},"v1WorkloadStatus":{"type":"string","enum":["ACTIVE","SUSPENDED","BILLING_SUSPENDED","INACTIVE"],"default":"ACTIVE","description":"Which status a workload is currently in\n\n- ACTIVE: The workload is active\n - SUSPENDED: The workload is suspended\n - BILLING_SUSPENDED: The workload is suspended due to non-payment\n - INACTIVE: The workload is inactive or has been deleted"},"v1WrappedImagePullCredentials":{"type":"array","title":"","items":{"$ref":"#/components/schemas/v1ImagePullCredential"},"description":"The credentials needed to pull a container image"},"workloadv1Instance":{"type":"object","properties":{"stackId":{"type":"string","description":"The ID of the stack that an instance belongs to"},"workloadId":{"type":"string","description":"The ID of the workload that an instance belongs to"},"id":{"type":"string","description":"An instance's unique identifier"},"name":{"type":"string","description":"An instance's name\n\nInstance names are generated from their corresponsing workload's slug, followed by a unique hash"},"metadata":{"$ref":"#/components/schemas/v1Metadata"},"location":{"$ref":"#/components/schemas/workloadv1Location"},"phase":{"$ref":"#/components/schemas/workloadv1InstanceInstancePhase"},"ipAddress":{"type":"string","description":"An instance's IP address"},"externalIpAddress":{"type":"string","description":"An instance's publicly accessible IP address"},"createdAt":{"type":"string","format":"date-time","description":"The date an instance was created"},"startedAt":{"type":"string","format":"date-time","description":"The date an instance was started"},"deletedAt":{"type":"string","format":"date-time","description":"The date an instance was deleted"},"networkInterfaces":{"type":"array","items":{"$ref":"#/components/schemas/workloadv1NetworkInterfaceStatus"},"description":"An instance's network interfaces"},"resources":{"$ref":"#/components/schemas/v1ResourceRequirements"},"containers":{"$ref":"#/components/schemas/v1ContainerSpecMapEntry"},"containerStatuses":{"type":"array","items":{"$ref":"#/components/schemas/v1ContainerStatus"},"description":"Status of the containers running within the workload instance"},"virtualMachines":{"$ref":"#/components/schemas/v1VirtualMachineSpecMapEntry"},"virtualMachineStatuses":{"type":"array","items":{"$ref":"#/components/schemas/v1VirtualMachineStatus"},"description":"The status of the virtual machines running within the workload instance"},"reason":{"type":"string","description":"A short reason that explains why an instance is in a phase"},"message":{"type":"string","description":"A longer message that provides more detail on why an instance is in a phase"},"scheduledAt":{"type":"string","format":"date-time","description":"The date an instance was scheduled"}},"description":"An instance of a workload deployment"},"workloadv1InstanceInstancePhase":{"type":"string","enum":["INSTANCE_PHASE_UNSPECIFIED","STARTING","RUNNING","FAILED","COMPLETED","SCHEDULING","STOPPED"],"default":"INSTANCE_PHASE_UNSPECIFIED","description":"An instance's startup state\n\n- INSTANCE_PHASE_UNSPECIFIED: StackPath is unable to determine the instance's startup state\n - STARTING: The instance is still initializing\n - RUNNING: The instance is running\n - FAILED: The instance failed to start\n - COMPLETED: The instance finished running\n - SCHEDULING: The instance is being scheduled\n - STOPPED: The instance is stopped"},"workloadv1Location":{"type":"object","properties":{"name":{"type":"string","description":"A human readable location name"},"city":{"type":"string","description":"A location's city"},"cityCode":{"type":"string","description":"A location's city, expressed as an IATA airport code"},"subdivision":{"type":"string","description":"A location's subdivision"},"subdivisionCode":{"type":"string","description":"A location's subdivision code"},"country":{"type":"string","description":"A location's country"},"countryCode":{"type":"string","description":"A location's ISO-3166-1 alpha-2 country code"},"region":{"type":"string","description":"A location's state or province"},"regionCode":{"type":"string","description":"A location's ISO-3166-2 region code"},"continent":{"type":"string","description":"A location's continent"},"continentCode":{"type":"string","description":"A location's continent code"},"latitude":{"type":"number","format":"double","description":"A location's geographic latitude"},"longitude":{"type":"number","format":"double","description":"A location's geographic longitude"}},"description":"Geographic location information"},"workloadv1NetworkInterfaceStatus":{"type":"object","properties":{"network":{"type":"string","description":"A network interface's name"},"ipAddress":{"type":"string","description":"A network interface's primary IP address"},"ipAddressAliases":{"type":"array","items":{"type":"string"},"description":"Additional IP addresses bound to a network interface"},"gateway":{"type":"string","description":"A network interface's gateway address"}},"description":"Network interfaces that are attached to an instance in a workload"}}}}
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Edge Compute",
+      "version": "1.0.0",
+      "contact": {
+        "name": "StackPath Support",
+        "url": "https://support.stackpath.com/"
+      }
+    },
+    "paths": {
+      "/workload/v1/locations": {
+        "get": {
+          "summary": "Get compute locations",
+          "operationId": "GetLocations",
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/v1GetLocationsResponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "page_request.first",
+              "description": "The number of items desired.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.after",
+              "description": "The cursor value after which data will be returned.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.filter",
+              "description": "SQL-style constraint filters.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.sort_by",
+              "description": "Sort the response by the given field.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "tags": [
+            "Infrastructure"
+          ],
+          "description": "Retrieve information about the StackPath edge network that can host a compute workload"
+        }
+      },
+      "/workload/v1/stacks/{stack_id}/images": {
+        "get": {
+          "summary": "Get all images",
+          "description": "Only non-deprecated images are returned by default",
+          "operationId": "GetImages",
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/v1GetImagesResponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.first",
+              "description": "The number of items desired.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.after",
+              "description": "The cursor value after which data will be returned.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.filter",
+              "description": "SQL-style constraint filters.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.sort_by",
+              "description": "Sort the response by the given field.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "deprecated",
+              "description": "If present and true, include deprecated images in the result.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "boolean",
+                "format": "boolean"
+              }
+            }
+          ],
+          "tags": [
+            "Virtual Machine Images"
+          ]
+        }
+      },
+      "/workload/v1/stacks/{stack_id}/images/{image_family}": {
+        "get": {
+          "summary": "Get a family's images",
+          "description": "Only non-deprecated images are returned by default. This will not error but instead return an empty list if the family is not found.",
+          "operationId": "GetImagesForFamily",
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/v1GetImagesForFamilyResponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "image_family",
+              "description": "An image family",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.first",
+              "description": "The number of items desired.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.after",
+              "description": "The cursor value after which data will be returned.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.filter",
+              "description": "SQL-style constraint filters.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.sort_by",
+              "description": "Sort the response by the given field.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "deprecated",
+              "description": "If present and true, include deprecated images in the result.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "boolean",
+                "format": "boolean"
+              }
+            }
+          ],
+          "tags": [
+            "Virtual Machine Images"
+          ]
+        },
+        "delete": {
+          "summary": "Delete a family's images",
+          "description": "",
+          "operationId": "DeleteImagesForFamily",
+          "responses": {
+            "204": {
+              "description": "No content"
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "image_family",
+              "description": "An image family",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "tags": [
+            "Virtual Machine Images"
+          ]
+        }
+      },
+      "/workload/v1/stacks/{stack_id}/images/{image_family}/{image_tag}": {
+        "post": {
+          "summary": "Create an image",
+          "operationId": "CreateImage",
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/v1CreateImageResponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "image_family",
+              "description": "The image's family",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "image_tag",
+              "description": "The image's tag",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1CreateImageRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "tags": [
+            "Virtual Machine Images"
+          ]
+        },
+        "patch": {
+          "summary": "Update an image",
+          "description": "Only metadata and description can be updated. The metadata, if set, replaces the entire existing metadata set. The tag cannot be \"default\".",
+          "operationId": "UpdateImage",
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/v1UpdateImageResponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "image_family",
+              "description": "An image's family!",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "image_tag",
+              "description": "An image's tag!",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1UpdateImageRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "tags": [
+            "Virtual Machine Images"
+          ]
+        },
+        "get": {
+          "summary": "Get an image",
+          "description": "",
+          "operationId": "GetImage",
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/v1GetImageResponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "image_family",
+              "description": "An image family",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "image_tag",
+              "description": "An image tag",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "default": "default"
+              }
+            }
+          ],
+          "tags": [
+            "Virtual Machine Images"
+          ]
+        },
+        "delete": {
+          "summary": "Delete an image",
+          "operationId": "DeleteImage",
+          "responses": {
+            "204": {
+              "description": "No content"
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "image_family",
+              "description": "An image's family",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "image_tag",
+              "description": "An image's tag",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "tags": [
+            "Virtual Machine Images"
+          ]
+        }
+      },
+      "/workload/v1/stacks/{stack_id}/images/{image_family}/{image_tag}/deprecation": {
+        "put": {
+          "summary": "Update deprecation settings",
+          "description": "This replaces an image's deprecation settings, so it can also undeprecate an image.",
+          "operationId": "UpdateImageDeprecation",
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/v1UpdateImageDeprecationResponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "image_family",
+              "description": "An image family",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "image_tag",
+              "description": "An image tag",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1ImageDeprecation"
+                }
+              }
+            },
+            "required": true
+          },
+          "tags": [
+            "Virtual Machine Images"
+          ]
+        }
+      },
+      "/workload/v1/stacks/{stack_id}/metrics": {
+        "get": {
+          "summary": "Get metrics",
+          "operationId": "GetMetrics",
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/prometheusMetrics"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "workload_id",
+              "description": "An EdgeCompute workload ID",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "start_date",
+              "description": "A lower bound date to search metrics for.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            {
+              "name": "end_date",
+              "description": "An upper bound date to search metrics for.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            {
+              "name": "type",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "BANDWIDTH",
+                  "INSTANCE"
+                ],
+                "default": "BANDWIDTH"
+              }
+            },
+            {
+              "name": "granularity",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "DEFAULT",
+                  "PT5M",
+                  "PT1H",
+                  "P1D",
+                  "PT1M"
+                ],
+                "default": "DEFAULT"
+              }
+            },
+            {
+              "name": "instance_name",
+              "description": "An instance name within a workload to filter metrics for",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "pop",
+              "description": "A StackPath POP to filter traffic metrics for. This field does not apply when retrieving INSTANCE type metrics",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "region",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "ALL",
+                  "LOCAL_NODE",
+                  "LOCAL_POP",
+                  "NORTH_AMERICA",
+                  "EUROPE",
+                  "ASIA",
+                  "OCEANIA",
+                  "SOUTH_AMERICA",
+                  "MARKETPLACE",
+                  "INTERNAL",
+                  "INTERNET"
+                ],
+                "default": "ALL"
+              }
+            },
+            {
+              "name": "group_by",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "NONE",
+                  "INSTANCE_NAME"
+                ],
+                "default": "NONE"
+              }
+            },
+            {
+              "name": "grouping",
+              "description": "List of fields to group by.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          ],
+          "tags": [
+            "Metrics"
+          ],
+          "description": "Retrieve usage metrics for all workloads in a stack, a specific workload, or a specific instance in a workload"
+        }
+      },
+      "/workload/v1/stacks/{stack_id}/workloads": {
+        "get": {
+          "summary": "Get all workloads",
+          "operationId": "GetWorkloads",
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/v1GetWorkloadsResponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.first",
+              "description": "The number of items desired.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.after",
+              "description": "The cursor value after which data will be returned.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.filter",
+              "description": "SQL-style constraint filters.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.sort_by",
+              "description": "Sort the response by the given field.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "tags": [
+            "Workloads"
+          ]
+        },
+        "post": {
+          "summary": "Create a workload",
+          "operationId": "CreateWorkload",
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/v1CreateWorkloadResponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1CreateWorkloadRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "tags": [
+            "Workloads"
+          ]
+        }
+      },
+      "/workload/v1/stacks/{stack_id}/workloads/{workload_id}": {
+        "get": {
+          "summary": "Get a workload",
+          "operationId": "GetWorkload",
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/v1GetWorkloadResponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "workload_id",
+              "description": "An EdgeCompute workload ID",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "tags": [
+            "Workloads"
+          ]
+        },
+        "delete": {
+          "summary": "Delete a workload",
+          "operationId": "DeleteWorkload",
+          "responses": {
+            "204": {
+              "description": "No content"
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "workload_id",
+              "description": "An EdgeCompute workload ID",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "tags": [
+            "Workloads"
+          ]
+        },
+        "patch": {
+          "summary": "Update a workload",
+          "operationId": "UpdateWorkload",
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/v1UpdateWorkloadResponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "workload_id",
+              "description": "An EdgeCompute workload ID",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1UpdateWorkloadRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "tags": [
+            "Workloads"
+          ]
+        }
+      },
+      "/workload/v1/stacks/{stack_id}/workloads/{workload_id}/instances": {
+        "get": {
+          "summary": "Get all workload instances",
+          "operationId": "GetWorkloadInstances",
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/v1GetWorkloadInstancesResponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "workload_id",
+              "description": "An EdgeCompute workload ID",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.first",
+              "description": "The number of items desired.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.after",
+              "description": "The cursor value after which data will be returned.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.filter",
+              "description": "SQL-style constraint filters.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "page_request.sort_by",
+              "description": "Sort the response by the given field.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "tags": [
+            "Instances"
+          ]
+        }
+      },
+      "/workload/v1/stacks/{stack_id}/workloads/{workload_id}/instances/{instance_name}": {
+        "get": {
+          "summary": "Get a workload instance",
+          "operationId": "GetWorkloadInstance",
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/v1GetWorkloadInstanceResponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "workload_id",
+              "description": "An EdgeCompute workload ID",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "instance_name",
+              "description": "An EdgeCompute workload instance name",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "tags": [
+            "Instances"
+          ]
+        }
+      },
+      "/workload/v1/stacks/{stack_id}/workloads/{workload_id}/instances/{instance_name}/logs": {
+        "get": {
+          "summary": "Get log stream",
+          "description": "Retrieve a stream of logs generated by a workload instance's containers. Logs are generated by the containers and are not modified by StackPath. Log contents vary by the application running in the container, though many containerized applications are configured to log to STDOUT and STDERR.",
+          "operationId": "GetLogs",
+          "responses": {
+            "200": {
+              "description": "(streaming responses)",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/v1LogChunk"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "description": "A stack ID or slug",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "workload_id",
+              "description": "An EdgeCompute workload ID",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "instance_name",
+              "description": "An EdgeCompute workload instance name",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "container_name",
+              "description": "The name of the container to obtain logs for. This defaults to first container in the instance.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "follow",
+              "description": "Whether or not to follow the instance's log stream. This defaults to false.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "boolean",
+                "format": "boolean"
+              }
+            },
+            {
+              "name": "previous",
+              "description": "Whether or not to return log entries made by previously terminated containers. This defaults to false.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "boolean",
+                "format": "boolean"
+              }
+            },
+            {
+              "name": "since_seconds",
+              "description": "A relative time in seconds before the current time from which to show logs. If this value precedes the time an instance was started, only logs since the instance's start time will be returned. If this value is in the future, no logs will be returned.\n\nOnly one of since_seconds or since_time may be specified",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "since_time",
+              "description": "An RFC3339 timestamp from which to show logs. If this value precedes the time an instance was started, only logs since the instance's start time will be returned. If this value is in the future, no logs will be returned.\n\nOnly one of since_seconds or since_time may be specified",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            {
+              "name": "timestamps",
+              "description": "Whether or not to add an RFC3339 or RFC3339Nano timestamp at the beginning of every line of log output. This defaults to false.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "boolean",
+                "format": "boolean"
+              }
+            },
+            {
+              "name": "tail_lines",
+              "description": "The number of lines from the end of the logs to show. If not specified, logs are shown from the creation of the container or since_seconds or since_time.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "limit_bytes",
+              "description": "The number of bytes to read from the server before terminating log output. This may not display a complete final line of logging, and may return slightly more or slightly less than the specified limit.",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "tags": [
+            "Instance Logs"
+          ]
+        }
+      },
+      "/workload/v1/stacks/{stack_id}/workloads/{workload_id}/instances/{instance_name}/power/restart": {
+        "post": {
+          "summary": "Restart a workload instance",
+          "description": "The action is performed asynchronously and a successful response does not mean the instance has restarted yet.",
+          "operationId": "RestartInstance",
+          "responses": {
+            "204": {
+              "description": "No content"
+            },
+            "401": {
+              "description": "Returned when an unauthorized request is attempted.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Default error structure.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/stackpathapiStatus"
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [
+            {
+              "name": "stack_id",
+              "in": "path",
+              "required": true,
+              "description": "A stack ID or slug",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "workload_id",
+              "in": "path",
+              "required": true,
+              "description": "An EdgeCompute workload ID",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "instance_name",
+              "in": "path",
+              "required": true,
+              "description": "An EdgeCompute workload instance name",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "tags": [
+            "Instances"
+          ]
+        }
+      }
+    },
+    "security": [
+      {
+        "oauth2": []
+      }
+    ],
+    "externalDocs": {
+      "description": "The StackPath API Reference",
+      "url": "https://stackpath.dev/reference"
+    },
+    "x-explorer-enabled": true,
+    "x-proxy-enabled": true,
+    "x-samples-enabled": true,
+    "x-samples-languages": [
+      "curl",
+      "node",
+      "ruby",
+      "javascript",
+      "python"
+    ],
+    "servers": [
+      {
+        "url": "https://gateway.stackpath.com"
+      }
+    ],
+    "components": {
+      "securitySchemes": {
+        "oauth2": {
+          "type": "oauth2",
+          "flows": {
+            "clientCredentials": {
+              "tokenUrl": "https://gateway.stackpath.com/identity/v1/oauth2/token",
+              "scopes": {}
+            }
+          }
+        }
+      },
+      "schemas": {
+        "ContainerStatusRunning": {
+          "type": "object",
+          "properties": {
+            "startedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date a container started"
+            }
+          },
+          "description": "Properties related to running containers"
+        },
+        "ContainerStatusTerminated": {
+          "type": "object",
+          "properties": {
+            "exitCode": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The exit code of the command that started the container"
+            },
+            "reason": {
+              "type": "string",
+              "description": "The reason a container terminated"
+            },
+            "message": {
+              "type": "string",
+              "description": "A more detailed explanation of a container's termination"
+            },
+            "startedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date a container started"
+            },
+            "finishedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date a container terminated"
+            }
+          },
+          "description": "Properties related to terminated containers"
+        },
+        "ContainerStatusWaiting": {
+          "type": "object",
+          "properties": {
+            "reason": {
+              "type": "string",
+              "description": "The reason that a container is waiting to start"
+            },
+            "message": {
+              "type": "string",
+              "description": "A more detailed explanation of a container's waiting state"
+            }
+          },
+          "description": "Properties related to containers that are starting up"
+        },
+        "DataMatrix": {
+          "type": "object",
+          "properties": {
+            "results": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/DataMatrixResult"
+              },
+              "description": "A data point's value"
+            }
+          },
+          "description": "A set of time series containing a range of data points over time for each time series"
+        },
+        "DataMatrixResult": {
+          "type": "object",
+          "properties": {
+            "metric": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "The data points' labels"
+            },
+            "values": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/DataValue"
+              },
+              "description": "Time series data point values"
+            }
+          },
+          "description": "Time series containing a range of data points over time for each time series"
+        },
+        "DataValue": {
+          "type": "object",
+          "properties": {
+            "unixTime": {
+              "type": "string",
+              "description": "The time that a data point was recorded"
+            },
+            "value": {
+              "type": "string",
+              "description": "A data point's value"
+            }
+          },
+          "description": "An individual metric data point"
+        },
+        "DataVector": {
+          "type": "object",
+          "properties": {
+            "results": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/DataVectorResult"
+              },
+              "description": "A data point's value"
+            }
+          },
+          "description": "A set of time series containing a single sample for each time series, all sharing the same timestamp"
+        },
+        "DataVectorResult": {
+          "type": "object",
+          "properties": {
+            "metric": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "The data points' labels"
+            },
+            "value": {
+              "$ref": "#/components/schemas/DataValue"
+            }
+          },
+          "description": "Time series containing a single sample for each time series, all sharing the same timestamp"
+        },
+        "MetricsData": {
+          "type": "object",
+          "properties": {
+            "matrix": {
+              "$ref": "#/components/schemas/DataMatrix"
+            },
+            "vector": {
+              "$ref": "#/components/schemas/DataVector"
+            }
+          },
+          "description": "The data points in a metrics collection"
+        },
+        "VirtualMachineStatusPhase": {
+          "type": "string",
+          "enum": [
+            "UNKNOWN",
+            "PENDING",
+            "SCHEDULING",
+            "STARTING",
+            "RUNNING",
+            "STOPPED",
+            "FAILED"
+          ],
+          "default": "UNKNOWN"
+        },
+        "VolumeClaimVolumeClaimPhase": {
+          "type": "string",
+          "enum": [
+            "VOLUME_CLAIM_PHASE_UNSPECIFIED",
+            "PENDING",
+            "UNBOUND",
+            "BOUND"
+          ],
+          "default": "VOLUME_CLAIM_PHASE_UNSPECIFIED",
+          "description": "Which phase a volume claim is currently in\n\n- VOLUME_CLAIM_PHASE_UNSPECIFIED: StackPath is unable to determine the volume claim's state\n - PENDING: The volume claim is pending\n - UNBOUND: The volume claim is unbound\n - BOUND: The volume claim is bound to an instance"
+        },
+        "apiStatusDetail": {
+          "type": "object",
+          "properties": {
+            "@type": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "@type"
+          ],
+          "discriminator": {
+            "propertyName": "@type"
+          }
+        },
+        "paginationPageInfo": {
+          "type": "object",
+          "properties": {
+            "totalCount": {
+              "type": "string",
+              "description": "The total number of items in the dataset"
+            },
+            "hasPreviousPage": {
+              "type": "boolean",
+              "format": "boolean",
+              "description": "Whether or not a previous page of data exists"
+            },
+            "hasNextPage": {
+              "type": "boolean",
+              "format": "boolean",
+              "description": "Whether or not another page of data is available"
+            },
+            "startCursor": {
+              "type": "string",
+              "description": "The cursor for the first item in the set of data returned"
+            },
+            "endCursor": {
+              "type": "string",
+              "description": "The cursor for the last item in the set of data returned"
+            }
+          },
+          "description": "Information about a paginated response\n\nThis is modeled after the GraphQL Relay spec to support both cursor based pagination and traditional offset based pagination."
+        },
+        "prometheusMetrics": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "$ref": "#/components/schemas/prometheusMetricsStatus"
+            },
+            "data": {
+              "$ref": "#/components/schemas/MetricsData"
+            },
+            "errorType": {
+              "type": "string",
+              "description": "The type of error encountered when querying for metrics"
+            },
+            "error": {
+              "type": "string",
+              "description": "The error encountered when querying for metrics"
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Warnings encountered when querying for metrics"
+            }
+          },
+          "description": "A collection of metrics"
+        },
+        "prometheusMetricsStatus": {
+          "type": "string",
+          "enum": [
+            "SUCCESS",
+            "ERROR"
+          ],
+          "default": "SUCCESS",
+          "description": "A metrics query's resulting status"
+        },
+        "stackpath.rpc.BadRequest": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/apiStatusDetail"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "fieldViolations": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/stackpath.rpc.BadRequest.FieldViolation"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "stackpath.rpc.BadRequest.FieldViolation": {
+          "type": "object",
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        },
+        "stackpath.rpc.Help": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/apiStatusDetail"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "links": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/stackpath.rpc.Help.Link"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "stackpath.rpc.Help.Link": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          }
+        },
+        "stackpath.rpc.LocalizedMessage": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/apiStatusDetail"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "locale": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "stackpath.rpc.PreconditionFailure": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/apiStatusDetail"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "violations": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/stackpath.rpc.PreconditionFailure.Violation"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "stackpath.rpc.PreconditionFailure.Violation": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "subject": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        },
+        "stackpath.rpc.QuotaFailure": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/apiStatusDetail"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "violations": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/stackpath.rpc.QuotaFailure.Violation"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "stackpath.rpc.QuotaFailure.Violation": {
+          "type": "object",
+          "properties": {
+            "subject": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        },
+        "stackpath.rpc.RequestInfo": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/apiStatusDetail"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "requestId": {
+                  "type": "string"
+                },
+                "servingData": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "stackpath.rpc.ResourceInfo": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/apiStatusDetail"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string"
+                },
+                "resourceName": {
+                  "type": "string"
+                },
+                "owner": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "stackpath.rpc.RetryInfo": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/apiStatusDetail"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "retryDelay": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "stackpathapiStatus": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "details": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/apiStatusDetail"
+              }
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        },
+        "v1ContainerSpec": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "string",
+              "description": "The location of a Docker image to run as a container"
+            },
+            "command": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "The commands that start a container"
+            },
+            "env": {
+              "$ref": "#/components/schemas/v1EnvironmentVariableMapEntry"
+            },
+            "ports": {
+              "$ref": "#/components/schemas/v1InstancePortMapEntry"
+            },
+            "livenessProbe": {
+              "$ref": "#/components/schemas/v1Probe"
+            },
+            "readinessProbe": {
+              "$ref": "#/components/schemas/v1Probe"
+            },
+            "resources": {
+              "$ref": "#/components/schemas/v1ResourceRequirements"
+            },
+            "volumeMounts": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/v1InstanceVolumeMount"
+              },
+              "description": "Volumes to mount in the container"
+            }
+          },
+          "description": "The specification for the desired state of a container in a workload"
+        },
+        "v1ContainerSpecMapEntry": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/components/schemas/v1ContainerSpec"
+          },
+          "description": "A string to container configuration key/value pair"
+        },
+        "v1ContainerStatus": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "A container status' name"
+            },
+            "phase": {
+              "$ref": "#/components/schemas/v1ContainerStatusContainerPhase"
+            },
+            "startedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date a container started"
+            },
+            "finishedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date a container terminated"
+            },
+            "waiting": {
+              "$ref": "#/components/schemas/ContainerStatusWaiting"
+            },
+            "running": {
+              "$ref": "#/components/schemas/ContainerStatusRunning"
+            },
+            "terminated": {
+              "$ref": "#/components/schemas/ContainerStatusTerminated"
+            },
+            "ready": {
+              "type": "boolean",
+              "format": "boolean",
+              "description": "Whether or not a container is running and ready for service"
+            },
+            "restartCount": {
+              "type": "integer",
+              "format": "int32",
+              "description": "How many times a container has restarted since it was first started"
+            },
+            "containerId": {
+              "type": "string",
+              "description": "A unique value that identifies a container"
+            }
+          },
+          "description": "The status of a container in a workload"
+        },
+        "v1ContainerStatusContainerPhase": {
+          "type": "string",
+          "enum": [
+            "CONTAINER_PHASE_UNSPECIFIED",
+            "STARTING",
+            "RUNNING",
+            "FAILED",
+            "STOPPED"
+          ],
+          "default": "CONTAINER_PHASE_UNSPECIFIED",
+          "description": "Which phase of runtime a container is currently in\n\n- CONTAINER_PHASE_UNSPECIFIED: The container has not reported a state back or StackPath is unable to determine the container's state\n - STARTING: The container is starting up\n - RUNNING: The container is running\n - FAILED: The container has terminated due to a failure\n - STOPPED: The container was terminated by the user"
+        },
+        "v1CreateImageRequest": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "$ref": "#/components/schemas/v1Image"
+            },
+            "instanceVolumeSource": {
+              "$ref": "#/components/schemas/v1ImageSourceInstanceVolume"
+            }
+          },
+          "title": ""
+        },
+        "v1CreateImageResponse": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "$ref": "#/components/schemas/v1Image"
+            }
+          },
+          "description": "A response from a request to create an image"
+        },
+        "v1CreateWorkloadRequest": {
+          "type": "object",
+          "properties": {
+            "workload": {
+              "$ref": "#/components/schemas/v1Workload"
+            }
+          },
+          "title": ""
+        },
+        "v1CreateWorkloadResponse": {
+          "type": "object",
+          "properties": {
+            "workload": {
+              "$ref": "#/components/schemas/v1Workload"
+            }
+          },
+          "description": "A response from a request to add a workload to a stack"
+        },
+        "v1DeploymentSpec": {
+          "type": "object",
+          "properties": {
+            "minReplicas": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The minimum number of instances in a deployment"
+            },
+            "maxReplicas": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The maximum number of instances in a deployment"
+            },
+            "scaleSettings": {
+              "$ref": "#/components/schemas/v1ScaleSettings"
+            },
+            "selectors": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/v1MatchExpression"
+              },
+              "description": "A collection of filters that match the deployment's scope"
+            }
+          },
+          "description": "A deployment's specification"
+        },
+        "v1DockerRegistryCredentials": {
+          "type": "object",
+          "properties": {
+            "server": {
+              "type": "string",
+              "description": "The server that the credentials should be used with\n\nThe server that the credentials should be used with. This value will default to the docker hub registry when not set."
+            },
+            "username": {
+              "type": "string",
+              "description": "The username that should be used for authenticate the image pull"
+            },
+            "password": {
+              "type": "string",
+              "description": "The password that should be used to authenticate the image pull"
+            },
+            "email": {
+              "type": "string",
+              "description": "The email address to use for the docker registry account"
+            }
+          },
+          "description": "The authentication configuration that should be used to pull images from a docker registry"
+        },
+        "v1EnvironmentVariable": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string",
+              "description": "An environment variable's value"
+            },
+            "secretValue": {
+              "type": "string",
+              "description": "A sensitive environment variable that should not be exposed"
+            }
+          },
+          "description": "The location to obtain a value for an environment variable"
+        },
+        "v1EnvironmentVariableMapEntry": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/components/schemas/v1EnvironmentVariable"
+          },
+          "description": "A string to environment variable key/value pair"
+        },
+        "v1GetImageResponse": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "$ref": "#/components/schemas/v1Image"
+            }
+          },
+          "description": "A response from a request to retrieve an individual image"
+        },
+        "v1GetImagesForFamilyResponse": {
+          "type": "object",
+          "properties": {
+            "pageInfo": {
+              "$ref": "#/components/schemas/paginationPageInfo"
+            },
+            "results": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/v1Image"
+              },
+              "description": "The requested images"
+            }
+          },
+          "description": "A response from a request to retrieve images by a family"
+        },
+        "v1GetImagesResponse": {
+          "type": "object",
+          "properties": {
+            "pageInfo": {
+              "$ref": "#/components/schemas/paginationPageInfo"
+            },
+            "results": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/v1Image"
+              },
+              "description": "The requested images"
+            }
+          },
+          "description": "A response from a request to retrieve images for a stack"
+        },
+        "v1GetLocationsResponse": {
+          "type": "object",
+          "properties": {
+            "pageInfo": {
+              "$ref": "#/components/schemas/paginationPageInfo"
+            },
+            "results": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/workloadv1Location"
+              },
+              "description": "The requested locations"
+            }
+          },
+          "description": "A response from a request to retrieve the locations a workload may be created at"
+        },
+        "v1GetWorkloadInstanceResponse": {
+          "type": "object",
+          "properties": {
+            "instance": {
+              "$ref": "#/components/schemas/workloadv1Instance"
+            }
+          },
+          "description": "A response from a request to retrieve a workload's instances"
+        },
+        "v1GetWorkloadInstancesResponse": {
+          "type": "object",
+          "properties": {
+            "pageInfo": {
+              "$ref": "#/components/schemas/paginationPageInfo"
+            },
+            "results": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/workloadv1Instance"
+              },
+              "description": "The requested workload instances"
+            }
+          },
+          "description": "A response from a request to retrieve a workload's instances"
+        },
+        "v1GetWorkloadResponse": {
+          "type": "object",
+          "properties": {
+            "workload": {
+              "$ref": "#/components/schemas/v1Workload"
+            }
+          },
+          "description": "A response from a request to retrieve an individual workload"
+        },
+        "v1GetWorkloadsResponse": {
+          "type": "object",
+          "properties": {
+            "pageInfo": {
+              "$ref": "#/components/schemas/paginationPageInfo"
+            },
+            "results": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/v1Workload"
+              },
+              "description": "The requested workloads"
+            }
+          },
+          "description": "A response from a request to retrieve a stack's workloads"
+        },
+        "v1HTTPGetAction": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "The path portion of the URL to request"
+            },
+            "port": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The TCP port to query in the HTTP request"
+            },
+            "scheme": {
+              "type": "string",
+              "description": "HTTP scheme to use in the HTTP request"
+            },
+            "httpHeaders": {
+              "$ref": "#/components/schemas/v1StringMapEntry"
+            }
+          },
+          "description": "Execute an HTTP GET request against an endpoint running on an instance"
+        },
+        "v1Image": {
+          "type": "object",
+          "properties": {
+            "stackId": {
+              "type": "string",
+              "readOnly": true,
+              "description": "The ID of the stack that an image belongs to"
+            },
+            "id": {
+              "type": "string",
+              "readOnly": true,
+              "description": "An image's unique identifier"
+            },
+            "family": {
+              "type": "string",
+              "description": "An image's family\n\nFamilies are logical groupings of images"
+            },
+            "tag": {
+              "type": "string",
+              "description": "The image's tag\n\nImage tags are akin to versions"
+            },
+            "metadata": {
+              "$ref": "#/components/schemas/v1ImageMetadata"
+            },
+            "description": {
+              "type": "string",
+              "description": "An image's description\n\nThis is optional and may not be more than 1,000 characters"
+            },
+            "status": {
+              "$ref": "#/components/schemas/v1ImageStatus"
+            },
+            "imageSize": {
+              "type": "string",
+              "description": "An image's archive size in bytes\n\nThis is only available on ready images",
+              "readOnly": true
+            },
+            "volumeSize": {
+              "type": "string",
+              "description": "An image's volume size in bytes\n\nThis is only available on ready images",
+              "readOnly": true
+            },
+            "deprecation": {
+              "$ref": "#/components/schemas/v1ImageDeprecation"
+            },
+            "conditions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/v1ImageCondition"
+              },
+              "readOnly": true,
+              "description": "Details about an image's status"
+            }
+          },
+          "description": "A virtual machine image"
+        },
+        "v1ImageCondition": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "description": "Type of the condition"
+            },
+            "status": {
+              "$ref": "#/components/schemas/v1ImageConditionStatus"
+            },
+            "checkedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The last time the condition was checked"
+            },
+            "transitionedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The last time the condition transitioned status"
+            },
+            "reason": {
+              "type": "string",
+              "description": "A stable identifier for the reason the condition is in its current state"
+            },
+            "message": {
+              "type": "string",
+              "description": "A human readable message with details regarding the condition"
+            }
+          },
+          "description": "Further information about an image's status"
+        },
+        "v1ImageConditionStatus": {
+          "type": "string",
+          "enum": [
+            "IMAGE_CONDITION_STATUS_UNKNOWN",
+            "TRUE",
+            "FALSE"
+          ],
+          "default": "IMAGE_CONDITION_STATUS_UNKNOWN",
+          "description": "Which status an image is currently in\n\n- IMAGE_CONDITION_STATUS_UNKNOWN: The condition status is unknown\n - TRUE: The condition is true\n - FALSE: The condition is false"
+        },
+        "v1ImageDeprecation": {
+          "type": "object",
+          "properties": {
+            "deprecationDate": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date when an image is considered deprecated\n\nDeprecated images may be used in new virtual machine based workloads, but are no longer considered for the \"default\" tag, nor are they returned in image lists by default."
+            },
+            "obsoletionDate": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date when an image is considered obsolete\n\nObsolete images may not be used in new virtual machine based workloads. If an obsoletion date is present then the deprecation date must also be present with a same or earlier date."
+            },
+            "deletionDate": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date when an image is deleted\n\nDeletion dates cannot be before an image's deprecation or obsoletion dates."
+            }
+          },
+          "description": "An image's deprecation settings"
+        },
+        "v1ImageMetadata": {
+          "type": "object",
+          "properties": {
+            "annotations": {
+              "$ref": "#/components/schemas/v1StringMapEntry"
+            },
+            "labels": {
+              "$ref": "#/components/schemas/v1StringMapEntry"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date that a workload image was created\n\nThe date an image was created",
+              "readOnly": true,
+              "nullable": true
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date that a workload image was last updated\n\nThe date an image was last updated",
+              "readOnly": true,
+              "nullable": true
+            }
+          },
+          "description": "An image's metadata"
+        },
+        "v1ImagePullCredential": {
+          "type": "object",
+          "properties": {
+            "dockerRegistry": {
+              "$ref": "#/components/schemas/v1DockerRegistryCredentials"
+            }
+          },
+          "description": "The credentials that should be used to pull the container image"
+        },
+        "v1ImageSourceInstanceVolume": {
+          "type": "object",
+          "properties": {
+            "workloadId": {
+              "type": "string",
+              "description": "The ID or slug of the workload containing the instance to reference"
+            },
+            "instanceName": {
+              "type": "string",
+              "description": "An instance's name to reference a volume on"
+            },
+            "volumeClaimSlug": {
+              "type": "string",
+              "description": "A reference to the volume to create an image from or unset for the root volume"
+            }
+          },
+          "description": "A reference to the volume of an instance to capture an image from"
+        },
+        "v1ImageStatus": {
+          "type": "string",
+          "enum": [
+            "IMAGE_STATUS_UNKNOWN",
+            "PENDING",
+            "PROCESSING",
+            "READY",
+            "FAILED"
+          ],
+          "default": "IMAGE_STATUS_UNKNOWN",
+          "description": "Which capture status an image is currently in\n\n- IMAGE_STATUS_UNKNOWN: The image status is unknown\n - PENDING: The image is pending creation\n - PROCESSING: The image is processing\n - READY: The image is ready\n - FAILED: The image failed to be created"
+        },
+        "v1InstancePort": {
+          "type": "object",
+          "properties": {
+            "port": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The network port"
+            },
+            "protocol": {
+              "type": "string",
+              "description": "The network protocol for the port\n\nValues are either \"TCP\" or \"UDP\". Defaults to \"TCP\"."
+            },
+            "enableImplicitNetworkPolicy": {
+              "type": "boolean",
+              "format": "boolean",
+              "description": "Allow the internet to connect to the port\n\nWhen true, this port will be given an implicit network policy of priority 65534 permitting 0.0.0.0/0 access to the port. This can be overridden by creating network policies of a higher priority to block the port."
+            }
+          },
+          "description": "A named port for an instance of a workload"
+        },
+        "v1InstancePortMapEntry": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/components/schemas/v1InstancePort"
+          },
+          "description": "A string to network port key/value pair"
+        },
+        "v1InstanceVolumeMount": {
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "description": "The slug of the volume claim to mount"
+            },
+            "mountPath": {
+              "type": "string",
+              "description": "The path in an instance to mount a volume"
+            }
+          },
+          "description": "Describes mounting a volume on containers or vms in an instance"
+        },
+        "v1LogChunk": {
+          "type": "object",
+          "properties": {
+            "bytes": {
+              "type": "string",
+              "format": "byte",
+              "description": "Raw log contents"
+            }
+          },
+          "description": "A chunk of raw log data"
+        },
+        "v1MatchExpression": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "The name of the selector to perform a match against"
+            },
+            "operator": {
+              "type": "string",
+              "description": "The operation to perform to match a selector\n\nValid values are \"In\", \"NotIn\", \"Exists\", and \"DoesNotExist\"."
+            },
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "The values to match in the selector"
+            }
+          },
+          "description": "An expression to match selectors against a set of values"
+        },
+        "v1Metadata": {
+          "type": "object",
+          "properties": {
+            "annotations": {
+              "$ref": "#/components/schemas/v1StringMapEntry"
+            },
+            "labels": {
+              "$ref": "#/components/schemas/v1StringMapEntry"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true,
+              "description": "The date that a metadata entry was created",
+              "nullable": true
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true,
+              "description": "The date that a metadata entry was last updated",
+              "nullable": true
+            },
+            "deleteRequestedAt": {
+              "type": "string",
+              "format": "date-time",
+              "readOnly": true,
+              "description": "The date an entity was requested to be deleted",
+              "nullable": true
+            },
+            "version": {
+              "type": "string",
+              "description": "A metadata entry's version number\n\nMetadata versions start at 1 when they are created and increment by 1 every time they are updated."
+            }
+          },
+          "description": "Metadata associated with an entity"
+        },
+        "v1MetricSpec": {
+          "type": "object",
+          "properties": {
+            "metric": {
+              "type": "string",
+              "description": "The metric to measure against"
+            },
+            "averageValue": {
+              "type": "string",
+              "description": "The target average value for the metric measured across all instances within a deployment, expressed as a quantity."
+            },
+            "averageUtilization": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The target average value for the metric measured across all instances within a deployment, expressed as a percentage of requested resources."
+            }
+          }
+        },
+        "v1NetworkInterface": {
+          "type": "object",
+          "properties": {
+            "network": {
+              "type": "string",
+              "description": "A network interface's name"
+            }
+          },
+          "description": "Network interfaces that will be created on instances in the workload"
+        },
+        "v1Probe": {
+          "type": "object",
+          "properties": {
+            "httpGet": {
+              "$ref": "#/components/schemas/v1HTTPGetAction"
+            },
+            "tcpSocket": {
+              "$ref": "#/components/schemas/v1TCPSocketAction"
+            },
+            "initialDelaySeconds": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The number of seconds after a workload instance has started before liveness probes are initiated"
+            },
+            "timeoutSeconds": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The number of seconds after which a probe times out\n\nDefaults to 1 second. Minimum value is 1."
+            },
+            "periodSeconds": {
+              "type": "integer",
+              "format": "int32",
+              "description": "How often, in seconds, to perform a probe\n\nDefault to 10 seconds. Minimum value is 1."
+            },
+            "successThreshold": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The minimum consecutive successes for a probe to be considered successful after having failed\n\nDefaults to 1. Must be 1 for liveness. Minimum value is 1."
+            },
+            "failureThreshold": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The minimum consecutive failures for a probe to be considered failed after having succeeded\n\nDefaults to 3. Minimum value is 1."
+            }
+          },
+          "description": "A health check probe against a workload instance to determine if it is alive or ready to receive traffic"
+        },
+        "v1ResourceRequirements": {
+          "type": "object",
+          "properties": {
+            "requests": {
+              "$ref": "#/components/schemas/v1StringMapEntry"
+            },
+            "limits": {
+              "$ref": "#/components/schemas/v1StringMapEntry"
+            }
+          },
+          "description": "Resource requirements for an object\n\nResource requirements are key/value pairs."
+        },
+        "v1ScaleSettings": {
+          "type": "object",
+          "properties": {
+            "metrics": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/v1MetricSpec"
+              },
+              "description": "Metrics to observe for invoking scaling events."
+            }
+          }
+        },
+        "v1StringMapEntry": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "A string to string key/value pair"
+        },
+        "v1TCPSocketAction": {
+          "type": "object",
+          "properties": {
+            "port": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The TCP port to quert"
+            }
+          },
+          "description": "Connect to an instance's TCP port"
+        },
+        "v1Target": {
+          "type": "object",
+          "properties": {
+            "spec": {
+              "$ref": "#/components/schemas/v1TargetSpec"
+            }
+          },
+          "description": "How instances in a workload should be deployed"
+        },
+        "v1TargetMapEntry": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/components/schemas/v1Target"
+          },
+          "description": "A string to deployment target key/value pair"
+        },
+        "v1TargetSpec": {
+          "type": "object",
+          "properties": {
+            "deploymentScope": {
+              "type": "string",
+              "description": "The scope at which a deployment should be created. Valid values are: \"cityCode\""
+            },
+            "deployments": {
+              "$ref": "#/components/schemas/v1DeploymentSpec"
+            }
+          },
+          "description": "The specification for a target"
+        },
+        "v1UpdateImageDeprecationResponse": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "$ref": "#/components/schemas/v1Image"
+            }
+          },
+          "description": "A response from a request to update image deprecation settings"
+        },
+        "v1UpdateImageRequest": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "$ref": "#/components/schemas/v1Image"
+            }
+          },
+          "title": ""
+        },
+        "v1UpdateImageResponse": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "$ref": "#/components/schemas/v1Image"
+            }
+          },
+          "description": "A response from a request to update an image"
+        },
+        "v1UpdateWorkloadRequest": {
+          "type": "object",
+          "properties": {
+            "workload": {
+              "$ref": "#/components/schemas/v1Workload"
+            }
+          },
+          "title": ""
+        },
+        "v1UpdateWorkloadResponse": {
+          "type": "object",
+          "properties": {
+            "workload": {
+              "$ref": "#/components/schemas/v1Workload"
+            }
+          },
+          "description": "A response from a request to update a workload"
+        },
+        "v1VirtualMachineSpec": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "string",
+              "description": "The image to use for the virtual machine\n\nThis is in the format of <stack-slug>/<image-family>[:<image-tag>]. If the image tag portion is omitted, 'default' is assumed which is the most recently created, ready, and non-deprecated image of that slug. A set of common images is present on the 'stackpath-edge' stack."
+            },
+            "userData": {
+              "type": "string",
+              "format": "base64",
+              "description": "Base64 encoded cloud-init compatible user-data"
+            },
+            "ports": {
+              "$ref": "#/components/schemas/v1InstancePortMapEntry"
+            },
+            "livenessProbe": {
+              "$ref": "#/components/schemas/v1Probe"
+            },
+            "readinessProbe": {
+              "$ref": "#/components/schemas/v1Probe"
+            },
+            "resources": {
+              "$ref": "#/components/schemas/v1ResourceRequirements"
+            },
+            "volumeMounts": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/v1InstanceVolumeMount"
+              },
+              "description": "Volumes to mount in the virtual machine"
+            }
+          },
+          "description": "The specification for the desired state of a virtual machine in a workload"
+        },
+        "v1VirtualMachineSpecMapEntry": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/components/schemas/v1VirtualMachineSpec"
+          },
+          "description": "A string to virtual machine configuration key/value pair"
+        },
+        "v1VirtualMachineStatus": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the virtual machine the status applies to"
+            },
+            "phase": {
+              "$ref": "#/components/schemas/VirtualMachineStatusPhase"
+            },
+            "reason": {
+              "type": "string",
+              "description": "A short reason why the virtual machine is in its current phase"
+            },
+            "message": {
+              "type": "string",
+              "description": "A longer message with details about why the virtual machine is in its current phase"
+            }
+          },
+          "description": "The status of a Virtual Machine"
+        },
+        "v1VolumeClaim": {
+          "type": "object",
+          "properties": {
+            "stackId": {
+              "type": "string",
+              "readOnly": true,
+              "description": "The ID of the stack that a volume claim belongs to"
+            },
+            "id": {
+              "type": "string",
+              "readOnly": true,
+              "description": "A volume claim's unique identifier"
+            },
+            "name": {
+              "type": "string",
+              "description": "A volume claim's name as it appears in the StackPath portal"
+            },
+            "slug": {
+              "type": "string",
+              "description": "A volume claim's programmatic name\n\nVolume claim slugs are used to programatically label a claim"
+            },
+            "metadata": {
+              "$ref": "#/components/schemas/v1Metadata"
+            },
+            "spec": {
+              "$ref": "#/components/schemas/v1VolumeClaimSpec"
+            },
+            "phase": {
+              "$ref": "#/components/schemas/VolumeClaimVolumeClaimPhase"
+            }
+          },
+          "description": "A claim for a volume\n\nVolumes may be attached to workload instance containers or virtual machines"
+        },
+        "v1VolumeClaimSpec": {
+          "type": "object",
+          "properties": {
+            "resources": {
+              "$ref": "#/components/schemas/v1ResourceRequirements"
+            }
+          },
+          "description": "The specification for a volume claim"
+        },
+        "v1Workload": {
+          "type": "object",
+          "properties": {
+            "stackId": {
+              "type": "string",
+              "readOnly": true,
+              "description": "The ID of the stack that a workload belongs to"
+            },
+            "id": {
+              "type": "string",
+              "readOnly": true,
+              "description": "A workload's unique identifier"
+            },
+            "name": {
+              "type": "string",
+              "description": "A workload's name as it appears in the StackPath portal"
+            },
+            "slug": {
+              "type": "string",
+              "description": "A workload's programmatic name\n\nWorkload slugs are used to build its instances names"
+            },
+            "metadata": {
+              "$ref": "#/components/schemas/v1Metadata"
+            },
+            "spec": {
+              "$ref": "#/components/schemas/v1WorkloadSpec"
+            },
+            "targets": {
+              "$ref": "#/components/schemas/v1TargetMapEntry"
+            },
+            "status": {
+              "$ref": "#/components/schemas/v1WorkloadStatus"
+            }
+          },
+          "description": "A computing workload\n\nWorkloads define a computing application to deploy to StackPath's edge network."
+        },
+        "v1WorkloadSpec": {
+          "type": "object",
+          "properties": {
+            "networkInterfaces": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/v1NetworkInterface"
+              },
+              "description": "Network interfaces to bind to the workload's instances"
+            },
+            "containers": {
+              "$ref": "#/components/schemas/v1ContainerSpecMapEntry"
+            },
+            "virtualMachines": {
+              "$ref": "#/components/schemas/v1VirtualMachineSpecMapEntry"
+            },
+            "volumeClaimTemplates": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/v1VolumeClaim"
+              },
+              "description": "A list of claims that instances may reference\n\nThe slug of the claim will be used in combination with the name of the instance to create a stable identifier. The slug should be used in the volume mount specifications for containers and VMs."
+            },
+            "imagePullCredentials": {
+              "$ref": "#/components/schemas/v1WrappedImagePullCredentials"
+            }
+          },
+          "description": "The specification for the desired state of a workload"
+        },
+        "v1WorkloadStatus": {
+          "type": "string",
+          "enum": [
+            "ACTIVE",
+            "SUSPENDED",
+            "BILLING_SUSPENDED",
+            "INACTIVE"
+          ],
+          "default": "ACTIVE",
+          "description": "Which status a workload is currently in\n\n- ACTIVE: The workload is active\n - SUSPENDED: The workload is suspended\n - BILLING_SUSPENDED: The workload is suspended due to non-payment\n - INACTIVE: The workload is inactive or has been deleted"
+        },
+        "v1WrappedImagePullCredentials": {
+          "type": "array",
+          "title": "",
+          "items": {
+            "$ref": "#/components/schemas/v1ImagePullCredential"
+          },
+          "description": "The credentials needed to pull a container image"
+        },
+        "workloadv1Instance": {
+          "type": "object",
+          "properties": {
+            "stackId": {
+              "type": "string",
+              "description": "The ID of the stack that an instance belongs to"
+            },
+            "workloadId": {
+              "type": "string",
+              "description": "The ID of the workload that an instance belongs to"
+            },
+            "id": {
+              "type": "string",
+              "description": "An instance's unique identifier"
+            },
+            "name": {
+              "type": "string",
+              "description": "An instance's name\n\nInstance names are generated from their corresponsing workload's slug, followed by a unique hash"
+            },
+            "metadata": {
+              "$ref": "#/components/schemas/v1Metadata"
+            },
+            "location": {
+              "$ref": "#/components/schemas/workloadv1Location"
+            },
+            "phase": {
+              "$ref": "#/components/schemas/workloadv1InstanceInstancePhase"
+            },
+            "ipAddress": {
+              "type": "string",
+              "description": "An instance's IP address"
+            },
+            "externalIpAddress": {
+              "type": "string",
+              "description": "An instance's publicly accessible IP address"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date an instance was created"
+            },
+            "startedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date an instance was started"
+            },
+            "deletedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date an instance was deleted"
+            },
+            "networkInterfaces": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/workloadv1NetworkInterfaceStatus"
+              },
+              "description": "An instance's network interfaces"
+            },
+            "resources": {
+              "$ref": "#/components/schemas/v1ResourceRequirements"
+            },
+            "containers": {
+              "$ref": "#/components/schemas/v1ContainerSpecMapEntry"
+            },
+            "containerStatuses": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/v1ContainerStatus"
+              },
+              "description": "Status of the containers running within the workload instance"
+            },
+            "virtualMachines": {
+              "$ref": "#/components/schemas/v1VirtualMachineSpecMapEntry"
+            },
+            "virtualMachineStatuses": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/v1VirtualMachineStatus"
+              },
+              "description": "The status of the virtual machines running within the workload instance"
+            },
+            "reason": {
+              "type": "string",
+              "description": "A short reason that explains why an instance is in a phase"
+            },
+            "message": {
+              "type": "string",
+              "description": "A longer message that provides more detail on why an instance is in a phase"
+            },
+            "scheduledAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date an instance was scheduled"
+            }
+          },
+          "description": "An instance of a workload deployment"
+        },
+        "workloadv1InstanceInstancePhase": {
+          "type": "string",
+          "enum": [
+            "INSTANCE_PHASE_UNSPECIFIED",
+            "STARTING",
+            "RUNNING",
+            "FAILED",
+            "COMPLETED",
+            "SCHEDULING",
+            "STOPPED"
+          ],
+          "default": "INSTANCE_PHASE_UNSPECIFIED",
+          "description": "An instance's startup state\n\n- INSTANCE_PHASE_UNSPECIFIED: StackPath is unable to determine the instance's startup state\n - STARTING: The instance is still initializing\n - RUNNING: The instance is running\n - FAILED: The instance failed to start\n - COMPLETED: The instance finished running\n - SCHEDULING: The instance is being scheduled\n - STOPPED: The instance is stopped"
+        },
+        "workloadv1Location": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "A human readable location name"
+            },
+            "city": {
+              "type": "string",
+              "description": "A location's city"
+            },
+            "cityCode": {
+              "type": "string",
+              "description": "A location's city, expressed as an IATA airport code"
+            },
+            "subdivision": {
+              "type": "string",
+              "description": "A location's subdivision"
+            },
+            "subdivisionCode": {
+              "type": "string",
+              "description": "A location's subdivision code"
+            },
+            "country": {
+              "type": "string",
+              "description": "A location's country"
+            },
+            "countryCode": {
+              "type": "string",
+              "description": "A location's ISO-3166-1 alpha-2 country code"
+            },
+            "region": {
+              "type": "string",
+              "description": "A location's state or province"
+            },
+            "regionCode": {
+              "type": "string",
+              "description": "A location's ISO-3166-2 region code"
+            },
+            "continent": {
+              "type": "string",
+              "description": "A location's continent"
+            },
+            "continentCode": {
+              "type": "string",
+              "description": "A location's continent code"
+            },
+            "latitude": {
+              "type": "number",
+              "format": "double",
+              "description": "A location's geographic latitude"
+            },
+            "longitude": {
+              "type": "number",
+              "format": "double",
+              "description": "A location's geographic longitude"
+            }
+          },
+          "description": "Geographic location information"
+        },
+        "workloadv1NetworkInterfaceStatus": {
+          "type": "object",
+          "properties": {
+            "network": {
+              "type": "string",
+              "description": "A network interface's name"
+            },
+            "ipAddress": {
+              "type": "string",
+              "description": "A network interface's primary IP address"
+            },
+            "ipAddressAliases": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Additional IP addresses bound to a network interface"
+            },
+            "gateway": {
+              "type": "string",
+              "description": "A network interface's gateway address"
+            }
+          },
+          "description": "Network interfaces that are attached to an instance in a workload"
+        }
+      }
+    }
+  }
