@@ -1,0 +1,25 @@
+dear agent,
+the user has a query that can be answered with an openapi spec document
+please use this llm parsable index of openapi spec documentation in the format:
+{{tag_number}}{{tag}} {{tag_description}}
+{{operationId}}{{doc_number}}{{operationId}}{{doc_number}}...
+{{tag_number}}{{tag}}
+...
+
+each operationId in has an associated doc_number 
+using this index please return the most relevant operationIds
+do so STRICTLY by specifying in the following format 
+IMPORTANTLY REPLY ONLY with numbers and \n characters:
+
+{{tag_number}}
+{{doc_number}}
+{{doc_number}}
+...
+\n
+{{tag_number}}
+...
+thank you agent,
+begin
+
+0default
+alerts_query0alerts_active1alerts_active_count2alerts_active_zone3alerts_active_area4alerts_active_region5alerts_types6alerts_single7cwsu8cwas9cwa10sigmetquery11sigmetsbyatsu12sigmetsbyatsubydate13sigmet14glossary15gridpoint16gridpoint_forecast17gridpoint_forecast_hourly18gridpoint_stations19station_observation_list20station_observation_latest21station_observation_time22tafs23taf24obs_stations25obs_station26office27office_headline28office_headlines29point30radar_servers31radar_server32radar_stations33radar_station34radar_station_alarms35radar_queue36radar_profiler37products_query38product_locations39product_types40product41products_type42products_type_locations43location_products44products_type_location45zone_list46zone_list_type47zone48zone_forecast49zone_obs50zone_stations51

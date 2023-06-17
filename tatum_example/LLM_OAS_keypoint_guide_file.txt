@@ -1,325 +1,123 @@
-Account-A Tatum Account is the primary building block of Tatumpowered applications It is an envelope that holds essential information about balances the state of the account or customer and to whom the account belongs
-Accounts in Tatum are stored within Tatum Private Ledger Tatum Private Ledger contains information about accounts the customers that own the accounts transactions that affect the accounts or virtual currencies present in the ledger
-By default the private ledger is not connected to any blockchain It is possible to create an application on it without any blockchain at all Using Tatum Private Ledger and the building blocks included within it it is possible to quickly swap the whole application from the ledger to any blockchain supported by Tatum All of the API calls will remain the same the only thing that changes is the blockchain the application lives on
-Most blockchains do not have any compliance layer at all It is not possible to freeze funds at a blockchain address or deactivate an address The Tatum Account has builtin compliance and it is possible to block funds in the account freeze outgoing transactions from the account or even completely deactivate the account
-0createaccount0getaccounts1getaccountscount2createaccountbatch3getaccountsbycustomerid4getaccountbyaccountid5getaccountbalance6blockamount7deleteblockamount8getblockamount9getblockamountbyid10deleteallblockamount11
-Transaction-An endpoint used to create and list transactions within Tatum Private Ledger A transaction is performed between 2 accounts with the same currency To perform an exchange operation between accounts with different currencies API calls from Order Book sections are available Transactions in the ledger are instant with a settlement time of below 200ms
-Tatum Private Ledger supports microtransactions  a transaction of an amount as little as 1e30 30 decimal places Transactions are atomic
-When there is an insufficient balance in the sender account or recipient account cannot receive funds the transaction is not settled
-1sendtransaction0sendtransactionbatch1gettransactionsbyaccountid2
-2gettransactionsbycustomerid0gettransactions1gettransactionsbyreference2
-Deposit
-3getdeposits0getdepositscount1
-Blockchain storage-You can store data records on the blockchain A record is stored permanently it cannot be changed
-deleted or modified by anyone and will be stored on the blockchain forever
-4storelog0getlog1
-IPFS-IPFS is a distributed file storage You can store data to IPFS and read from them
-5getipfsdata0storeipfs1
-Bitcoin-Bitcoin Blockchain enables access to the most commonly used Bitcoin methods These methods bring a small level of abstraction
-and are used for applications that communicate with the blockchain directly Some of the methods are used alongside Tatum Private Ledger
-to connect the blockchain and the private ledger like wallet generation or getting information about transactions
-Tatum supports 2 chains
-Mainnet  a regular live chain
-Testnet3  a chain used for testing purposes Coins on the test chain have no value and can be obtained from a faucet eg https//testnetfaucetmempoolco/
-6btcgeneratewallet0btcgenerateaddress1btcgenerateaddressprivatekey2btcgetblockchaininfo3btcgetblockhash4btcgetblock5btcgetbalanceofaddress6btcgetbalanceofaddressbatch7btcgettxbyaddress8btctransferblockchain9btcgetrawtransaction10btcgetutxo11btcgetmempool12btcbroadcast13
-Blockchain fees
-7getblockchainfee0estimatefeeblockchain1bscestimategas2
-8celoestimategas0egldestimategas1ethestimategas2ethestimategasbatch3oneestimategas4klaytnestimategas5kcsestimategas6polygonestimategas7xdcestimategas8vetestimategas9
-Blockchain utils-The utility APIs help you use some native blockchain features such as getting the address of a smart contract or estimating the block number
-Each utility API supports its own set of the blockchains The list of the supported blockchains is provided in the API description further in this section
-9scgetcontractaddress0getauctionestimatedtime1
-Gas pump-The gas pump is Tatums feature that helps you manage gas fees in a custodial application When you use the gas pump gas fees for any transaction made by your customers users of your custodial application are automatically deducted from the master address instead of the customers address This eliminates the need to send crypto to each customers address to pay for gas fees
-For more information about the gas pump see our user documentation
-Each API related to the gas pump supports its own set of the blockchains The list of the supported blockchains is provided in the API description further in this section
-10precalculategaspumpaddresses0activategaspumpaddresses1
-11activatednotactivatedgaspumpaddresses0gaspumpaddressesactivatedornot1transfercustodialwallet2transfercustodialwalletbatch3
-12approvetransfercustodialwallet0
-Marketplace-Build a peertopeer NFT marketplace and allow your customers to sell and buy assets When an asset is sold the creator is automatically paid the asset is instantly transferred to the buyer and you as the owner of the marketplace automatically receive a percentage of the transaction
-Each marketplacerelated API supports its own set of the blockchains The list of the supported blockchains is provided in the API description further in this section
-13generatemarketplace0
-14sellassetonmarketplace0
-15buyassetonmarketplace0
-16cancelsellmarketplacelisting0getmarketplacelistings1getmarketplacelisting2getmarketplaceinfo3getmarketplacefee4getmarketplacefeerecipient5
-17withdrawfeefrommarketplace0withdrawtreasuryfrommarketplace1
-Auction
-18generateauction0
-19createauction0
-20bidonauction0
-21settleauction0
-22cancelauction0
-23approvenftauctionspending0getauction1getauctionfee2getauctionfeerecipient3
-Node RPC-Interact with the blockchain directly by connecting to the blockchain node and communicating with it through JSONRPC
-Each noderelated API supports its own set of the blockchains The list of the supported blockchains is provided in the API description further in this section
-24nodejsonpostrpcdriver0nodejsonrpcgetdriver1
-Ethereum-Ethereum is a decentralized opensource blockchain With Tatum you can access the most commonly used Ethereum methods These methods bring a certain level of abstraction and are used for applications that communicate with the blockchain directly Some of the methods are used alongside virtual accounts to connect the blockchain and a virtual account like generating a wallet or getting information about transactions
-Tatum supports the following Ethereum networks
+dear agent,
+the user has a query that can be answered with an openapi spec document
+please use this llm parsable index of openapi spec documentation in the format:
+{{tag_number}}{{tag}} {{tag_description}}
+{{operationId}}{{doc_number}}{{operationId}}{{doc_number}}...
+{{tag_number}}{{tag}}
+...
 
-Mainnet the primary public production blockchain
-Sepolia a proofofwork testnet and the default testnet for Ethereum The testnet cryptocurrency has no value and you can obtain it from a faucet for example FaucETH
-25ethgeneratewallet0ethgenerateaddress1ethgenerateaddressprivatekey2ethgetcurrentblock3ethgetblock4ethgetbalance5ethgettransaction6ethgettransactioncount7ethgettransactionbyaddress8ethblockchaintransfer9ethblockchainsmartcontractinvocation10ethgetinternaltransactionbyaddress11ethbroadcast12
-Key Management System-Key Management System KMS is a comprehensive solution for building custodial applications KMS runs locally on your server and provides security for generating wallets addresses and private keys and for signing transactions
-KMS builds a list of pending transaction to sign and provides the options to complete a transaction after it has been signed and to obtain transaction details with the result of the blockchain operation via the transaction ID
-In KMS each managed wallet or private key is assigned a unique signature ID signatureId that represents that wallet or private key This signature ID is then used in an API request to identify the wallet
-Depending on the API you can use the signature ID in an API call request in the following ways
+each operationId in has an associated doc_number 
+using this index please return the most relevant operationIds
+do so STRICTLY by specifying in the following format 
+IMPORTANTLY REPLY ONLY with numbers and \n characters:
 
+{{tag_number}}
+{{doc_number}}
+{{doc_number}}
+...
+\n
+{{tag_number}}
+...
+thank you agent,
+begin
 
-To represent the mnemonic type of the wallet for example in the API for sending BTC from a virtual account to the blockchain see the transferBtcKMS request schema
-To represent the privateKey type of the wallet for example in the API for sending BTC to a blockchain address see the BtcTransactionFromUTXOKMS request schema
-To represent the mnemonic and index type of the wallet for example in the API for sending ETH from a virtual account to the blockchain see the transferEthKMS request schemaIn this case the index of the specific private key generated from the mnemonic must be used in addition to the signature ID
-
-You can run KMS on the following operating systems
-
-macOS Natively or via Docker
-Unix Natively or via Docker
-MS Windows Only via Docker
-
-For more information about KMS see the KMS GitHub repository and the user documentation
-26getpendingtransactionstosign0receivependingtransactionstosign1getpendingtransactiontosign2deletependingtransactiontosign3
-Malicious address-An endpoint to check if the blockchain address is safe to work with or not
-27checkmalicousaddress0
-Customer-An endpoint used to handle customer operations like updating customer information enabling/disabling etc
-Within Tatum API a customer represents a client of the entity that communicates with Tatum
-Customers cannot be created via any other operation than Create Ledger Account
-Due to compliance restrictions it is recommended to enter the country of residence of the customer and the country of the provider The Tatum compliance engine operates based on this information
-28findallcustomers0getcustomerbyexternalorinternalid1
-Virtual Currency-Register and use Tatum Private Ledgers virtual currencies You can create your own virtual currency and distribute it amongst your customers
-Virtual currencies are used to support FIAT currencies When a virtual currency is created with basePair of the FIAT currency it is possible to perform transactions in the private ledger in FIAT
-29createcurrency0
-30getcurrency0
-Order Book-Endpoint to handle Order book operations like creating BID / ASK trades between Tatum Private Virtual accounts obtaining trade histories creating futures etc It is possible to build an exchange based on the Ledger Accounts
-31storetrade0chartrequest1gethistoricaltradesbody2getbuytradesbody3getselltradesbody4getmatchedtrades5gettradebyid6deletetrade7deleteaccounttrades8
-Notification subscriptions-Endpoints to handle subscriptions to the Tatum Platform Subscriptions allow users to enable some additional features or reports that are not enabled by default
-like outgoing offchain transaction scanning accounts with balances above the limit etc
-32createsubscription0getsubscriptions1disablewebhookhmac2getsubscriptionscount3deletesubscription4getsubscriptionreport5getallwebhooks6getallwebhookscount7
-Blockchain addresses-Manage deposit addresses associated with your virtual account
-Depending on how virtual accounts are connected to the blockchain the virtual accounts can be
-
-Virtual accounts with associated deposit addresses
-Customers can send funds to and receive funds from other blockchain addresses
-Virtual accounts with no deposit addresses
-These accounts have a cryptocurrency assigned but do not have any associated deposit addresses The customers can send funds to and receive funds from another virtual accounts and can send funds to blockchain addresses However the customers cannot receive funds from blockchain addresses
-33generatedepositaddress0getalldepositaddresses1generatedepositaddressesbatch2addressexists3assignaddress4removeaddress5
-Withdrawal
-34storewithdrawal0getwithdrawals1cancelinprogresswithdrawal2broadcastblockchaintransaction3
-Virtual account blockchain fees
-35offchainestimatefee0
-Blockchain operations-An endpoint to handle operations between a virtual account and the blockchain eg to create blockchain transactions from virtual accounts create custom fungible tokens and custom assets and register them as a regular currency into the virtual account
-36btctransfer0
-37bchtransfer0
-38ltctransfer0
-39flowtransfer0
-40dogetransfer0
-41ethtransfer0
-42polygontransfer0
-43kcstransfer0
-44ethtransfererc200ethdeployerc201
-45bscorbeptransfer0bscdeploybep201
-46klaytransfer0klaydeployerc201
-47xdctransfer0xdcdeployerc201
-48onetransfer0onedeployhrm201registererc20token2storetokenaddress3
-49celoorerc20transfer0celodeployerc20ledger1kcsdeployerc20ledger2
-50soltransfer0xlmtransfer1
-51xlmassetoffchain0xrptransfer1
-52xrpassetoffchain0bnbtransfer1
-53bnbassetoffchain0adatransferoffchain1
-54trontransferoffchain0createtrc1trondeploytrc2
-55egldtransfer0algodeployerc20ledger1
-56algotransfer0
-Bitcoin Cash-Bitcoin Cash Blockchain enables access to the most commonly used Bitcoin Cash methods These methods bring a small level of abstraction
- and are used for applications that communicate with the blockchain directly Some of the methods are used alongside Tatum Private Ledger
- to connect the blockchain and the private ledger like wallet generation or getting information about transactions
-Tatum supports 2 chains
-  Mainnet  a regular live chain
-  Testnet  a chain used for testing purposes Coins on the test chain have no value and can be obtained from a faucet eg https//faucetfullstackcash/
-  
-Tatum supports BIP44 HD wallets Because they can generate 231 addresses from 1 mnemonic phrase they are very convenient and secure It is possible to generate this type of wallet with 1 simple API call
-57bchgeneratewallet0bchgetblockchaininfo1bchgetblockhash2bchgetblock3bchgetrawtransaction4bchgettxbyaddress5bchgenerateaddress6bchgenerateaddressprivatekey7bchtransferblockchain8bchbroadcast9
-Litecoin-Litecoin Blockchain enables access to the most commonly used Litecoin methods These methods bring a small level of abstraction and are used for applications that communicate with the blockchain directly Some of the methods are used alongside Tatum Private Ledger
- to connect the blockchain and the private ledger like wallet generation or getting information about transactions
-Examples of working with the Litecoin blockchain can be found in Tatum LTC SDK
-Tatum supports 2 chains
-  Mainnet  a regular live chain
-  Testnet  a chain used for testing purposes Coins on the test chain have no value and can be obtained from a faucet eg http//testnetlitecointoolscom/
-Tatum supports BIP44 HD wallets Because they can generate 231 addresses from 1 mnemonic phrase they are very convenient and secure It is possible to generate this type of wallet with 1 simple API call
-58ltcgeneratewallet0ltcgetblockchaininfo1ltcgetblockhash2ltcgetblock3ltcgetrawtransaction4ltcgetmempool5ltcgettxbyaddress6ltcgetbalanceofaddress7ltcgetbalanceofaddressbatch8ltcgetutxo9ltcgenerateaddress10ltcgenerateaddressprivatekey11ltctransferblockchain12ltcbroadcast13
-Dogecoin-Dogecoin Blockchain enables access to the most commonly used Dogecoin methods These methods bring a small level of abstraction
- and are used for applications that communicate with the blockchain directly Some of the methods are used alongside Tatum Private Ledger
- to connect the blockchain and the private ledger like wallet generation or getting information about transactions
-Tatum supports 2 chains
-  Mainnet  a regular live chain
-  Testnet  a chain used for testing purposes Coins on the test chain have no value and can be obtained from a faucet eg https//testnetfaucetcom/dogetestnet/
-Tatum supports BIP44 HD wallets Because they can generate 231 addresses from 1 mnemonic phrase they are very convenient and secure It is possible to generate this type of wallet with 1 simple API call
-59dogegeneratewallet0dogegenerateaddress1dogegenerateaddressprivatekey2dogegetblockchaininfo3dogegetblockhash4dogegetblock5dogegetrawtransaction6dogegettxbyaddress7dogegetbalanceofaddress8dogegetbalanceofaddressbatch9dogegetmempool10dogegetutxo11dogetransferblockchain12dogebroadcast13
-Flow-Flow Blockchain enables access to the most commonly used Flow methods These methods bring a small level of abstraction
- and are used for applications that communicate with the blockchain directly Some of the methods are used alongside Tatum Private Ledger
- to connect the blockchain and the private ledger like wallet generation or getting information about transactions
-Tatum supports FLOW and FUSD stable coin
-Tatum supports 2 chains
-  Mainnet  a regular live chain
-  Testnet  a chain used for testing purposes Coins on the test chain have no value and can be obtained from a faucet eg https//testnetfaucetonfloworg/
-To obtain FUSD on testnet you can swap them using https//swaptestnetbloctoapp/#/swap
-To create accounts or mint NFTs on mainnet you have to have paid API Key Tatum covers the transaction fees on FLOW blockchain out of the box so mainnet operations are available only on the paid API Key
-Tatum handles automatically proposal key management  we internally rotate the proposal keys for you so you dont have to take care of that and can easily scale your transaction throughput
-Tatum supports BIP44 HD wallets Because they can generate 231 addresses from 1 mnemonic phrase they are very convenient and secure It is possible to generate this type of wallet with 1 simple API call
-Its not possible to pregenerate addresses on the Flow blockchain You can generate only public keys which are used to generate address using a create account transaction to the Flow blockchain
-You have to have existing account on the Flow to initialize new address creation Transactions on the Flow blockchain are free
-60flowgeneratewallet0flowgenerateaddress1flowgeneratepubkey2flowgeneratepubkeyprivatekey3flowgetblockchaininfo4flowgetblock5flowgetblockevents6flowgetrawtransaction7flowgetaccount8flowtransferblockchain9flowtransfercustomblockchain10flowcreateaddressfrompubkey11
-XRP-XRPL is a decentralized public blockchain With Tatum you can access the most commonly used XRPL methods These methods bring a certain level of abstraction and are used for applications that communicate with the blockchain directly Some of the methods are used alongside virtual accounts to connect the blockchain and a virtual account like generating a wallet or getting information about transactions
-Tatum supports the following XRPL networks
-
-Mainnet the primary public production blockchain
-Testnet a mainnetlike network for testing applications on XRPL The testnet cryptocurrency has no value and you can obtain it from a faucet for example XRP Faucets
-
-To start using the XRPL blockchain create an XRPL account On XRPL the same account is used for the mainnet and the testnet To activate the account credit it with 20 XRP
-Because of the activation requirement it is common to use one account for all customers and differentiate them via Destination tags A Destination tag is a number included in every transaction as an account distinguisher
-When an offchain deposit address is created for a virtual account a Destination tag is generated for that account for example 12345 When you make a transaction to the blockchain be sure to include the address of the recipient and the Destination tag as an account distinguisher Examples of working with the XRP blockchain can be found in Tatum XRP SDK
-61xrpwallet0xrpgetlastclosedledger1xrpgetfee2xrpgetaccounttx3xrpgetledger4xrpgettransaction5xrpgetaccountinfo6xrpgetaccountbalance7xrptransferblockchain8xrptrustlineblockchain9xrpaccountsettings10xrpbroadcast11
-Stellar-XLM Blockchain enables access to the most commonly used XLM methods These methods bring a small level of abstraction
-and are used for applications that communicate with the blockchain directly Some of the methods are used alongside Tatum Private Ledger
-to connect the blockchain and the private ledger like wallet generation or getting information about transactions
-Examples of working with the Stellar blockchain can be found in Tatum XLM SDK
-Tatum supports 2 chains
- Mainnet  a regular live chain
-Testnet  a chain used for testing purposes Coins on the test chain have no value and can be obtained from a faucet eg https//friendbotstellarorg/addraddress
-In order to start using the XLM blockchain we first need to create an XLM account In order to have the account activated it must be credited with 05 XLM  Because of this requirement it is common to use one account for all customers and differentiate them using a memo  a short text/number included in every transaction as an account distinguisher
-When an offchain deposit address is created for the ledger account a memo is generated eg 12345 for that account When a transaction to the blockchain is performed it should contain the address of the recipient and the memo as an account distinguisher
-62xlmwallet0xlmgetlastclosedledger1xlmgetledger2xlmgetledgertx3xlmgetfee4xlmgetaccounttx5xlmgettransaction6xlmgetaccountinfo7xlmtransferblockchain8xlmtrustlineblockchain9xlmbroadcast10
-BNB Beacon Chain-BNB Beacon Chain is a blockchain developed by Binance With Tatum you can access the most commonly used BNB Beacon Chain methods These methods bring a certain level of abstraction and are used for applications that communicate with the blockchain directly
-BNB Beacon Chain does not provide the smart contract functionality
-Tatum supports the following BNB Beacon Chain networks
-
-Mainnet the primary public production blockchain
-Testnet a chain used for testing purposes The testnet cryptocurrency has no value and you can obtain it from a faucet for example get it from the BNB Smart Chain Faucet and transfer it to your BNB Beacon Chain address using the Binance Wallet
-63bnbgeneratewallet0bnbgetcurrentblock1bnbgetblock2bnbgetaccount3bnbgettransaction4bnbgettxbyaccount5bnbblockchaintransfer6bnbbroadcast7
-VeChain-VeChain Blockchain enables access to the most commonly used VeChain methods Tatum does not support offchain capabilities for the VET blockchain
-Tatum KMS is not supported for VET transactions VET supports 2 native assets  VET and VTHO VTHO is used for paying transaction fees
-
-Tatum supports 2 chains
-Mainnet  a regular live chain
-Testnet  a test chain used for testing purposes Coins on the test chain have no value and can be obtained from
-a faucet eg https//faucetvechain/
-Tatum supports BIP44 HD wallets Because they can generate 231 addresses from 1 mnemonic phrase they are very convenient and secure It is possible to generate this type of wallet with 1 simple API call
-64vetgeneratewallet0vetgenerateaddress1vetgenerateaddressprivatekey2vetgetcurrentblock3vetgetblock4vetgetbalance5vetgetenergy6vetgettransaction7vetgettransactionreceipt8vetblockchaintransfer9vetbroadcast10
-Cardano-Cardano is a decentralized opensource blockchain With Tatum you can access the most commonly used Cardano methods These methods bring a certain level of abstraction and are used for applications that communicate with the blockchain directly Some of the methods are used alongside virtual accounts to connect the blockchain and a virtual account like generating a wallet or getting information about transactions
-Tatum supports Cardano mainnet and Cardano preproduction testnet
-65adagetblockchaininfo0adageneratewallet1adagenerateaddress2adagenerateaddressprivatekey3adagetblock4adagetrawtransaction5adagettxbyaddress6adagetutxobyaddress7adatransferblockchain8adabroadcast9adagetaccount10
-Service utils
-66getcredits0getversion1unfreezeapikey2
-Exchange rate
-67getexchangerate0getexchangerates1
-Custodial managed wallets-Custodial API is a set of operations which allows you to work with managed blockchain addresses without having its private key
-You can easily create new managed address and export its details  with private key as well  once required
-This features are currently in Alpha version
-68custodialcreatewallet0custodialgetwallets1custodialgetwallet2custodialdeletewallet3custodialtransfermanagedaddress4
-Algorand-Algorand is a decentralized blockchain technology network Algorand is enabling the simple creation of next generation financial products protocols and exchange of value across defi financial institutions and governments
-Tatum supports 2 chains
-Mainnet  a regular live chain
-Testnet  a chain used for testing purposes Coins on the test chain have no value and can be obtained from
-a faucet eg https//banktestnetalgorandnetwork/
-Examples of working with the Algorand blockchain can be found in Tatum ALGO SDK
-69algorandgeneratewallet0algorandgenerateaddress1algorandgetbalance2algorandgetcurrentblock3algorandgetblock4algorandblockchaintransfer5algorandblockchainreceiveasset6algorandgettransaction7algorandbroadcast8
-Polygon-Polygon Matic is an Ethereum EVM 100 compatible blockchain and is very good for decentralized application Dapp development within many possible verticals including DeFi NFT Gaming and many others
-Tatum supports 2 chains
-Mainnet  a regular live chain
-Mumbai Testnet  a chain used for testing purposes Coins on the test chain have no value and can be obtained from
-a faucet eg https//faucetmaticnetwork/
-70polygongeneratewallet0polygongenerateaddress1polygongenerateaddressprivatekey2polygongetcurrentblock3polygongetblock4polygongetbalance5polygongettransaction6polygongettransactionbyaddress7polygongettransactioncount8polygonblockchaintransfer9polygonblockchainsmartcontractinvocation10polygonbroadcast11
-Klaytn-Klaytn is an Ethereum EVM 100 compatible blockchain and is very good for decentralized application Dapp development within many possible verticals including DeFi NFT Gaming and many others
-Tatum supports 2 chains
-Mainnet  a regular live chain
-Baobab Testnet  a chain used for testing purposes Coins on the test chain have no value and can be obtained from
-a faucet eg https//baobabwalletklaytncom/accessnextfaucet
-71klaytngeneratewallet0klaytngenerateaddress1klaytngenerateaddressprivatekey2klaytngetcurrentblock3klaytngetblock4klaytngetbalance5klaytngettransaction6klaytngettransactioncount7klaytnblockchaintransfer8klaytnblockchainsmartcontractinvocation9klaytnbroadcast10
-Solana-Solana is a blockchain network focused on fast transactions and high throughput It uses a unique method of ordering transactions to improve its speed Users can pay their transaction fees and interact with smart contracts with SOL the networks native cryptocurrency
-For now Solana is in BETA and there is a rate limitation applied for all projects for Solana to 40 req/s on the platform
-Tatum supports 2 chains
-Mainnet BETA  a regular live chain
-Devnet  a chain used for testing purposes Coins on the test chain have no value and can be obtained from
-a faucet eg https//solfaucetcom/
-72solanageneratewallet0solanagetcurrentblock1solanagetblock2solanagetbalance3solanagettransaction4solanablockchaintransfer5solanabroadcastconfirm6
-Celo-Celo is fork of Celo with more than 1000 tps and possibility to pay for
-transactions in its own stable coin cUSD Celo Blockchain enables access to most commonly used Celo methods
-These methods bring small level of abstraction
-       and are used for the type of applications that want to communicate with blockchain directly Some of the methods are used alongside Tatum Private Ledger
-       to connect blockchain and private ledger together like wallet generation or getting information about transactions
-      Tatum supports 2 chains
-      Mainnet  regular live chain
-      Alfajorec  test chain used for testing purposes Coins on test chain have no value and can be obtained from
-      Faucet eg https//celoorg/developers/faucet
-      Tatum supports BIP44 HD wallets It is very convenient and secure since it can generate 231 addresses from 1 mnemonic phrase It is possible to generate this type of wallet with 1 simple API call
-73celogeneratewallet0celogenerateaddress1celogenerateaddressprivatekey2celogetcurrentblock3celogetblock4celogetbalance5celogettransactionbyaddress6celogettransaction7celogettransactioncount8celoblockchaintransfer9celoblockchainsmartcontractinvocation10celobroadcast11
-Elrond-Elrond EGLD is a distributed transactional computation protocol which relies on a sharded state architecture and a secure Proof of Stake consensus mechanism
-
-Tatum supports 2 chains
-Mainnet  a regular live chain
-Devnet  a chain used for testing purposes Coins on the test chain have no value and can be obtained from
-a faucet eg https//r3d4fr/elrond/devnet/
-74egldgeneratewallet0egldgenerateaddress1egldgenerateaddressprivatekey2egldgetcurrentblock3egldgetblock4egldgetbalance5egldgettransaction6egldgettransactionaddress7egldgettransactioncount8egldblockchaintransfer9egldbroadcast10
-Tron-Tron Blockchain enables access to most commonly used Tron methods Its possible to generate TRON account send TRX TRC10 and TRC20 assets Its also possible to generate custom TRC10 or TRC20 tokens using API
-Tatum supports 2 chains
-Mainnet  regular live chain
-Shasta Testnet  test chain used for testing purposes Coins on test chain have no value and can be obtained from
-Faucet eg https//wwwtrongridio/shasta/
-75generatetronwallet0trongenerateaddress1trongenerateaddressprivatekey2trongetcurrentblock3trongetblock4trongetaccount5tronfreeze6tronunfreeze7tronaccounttx8tronaccounttx209trontransfer10trontransfertrc1011
-76trontransfertrc200troncreatetrc101trontrc10detail2troncreatetrc203trongettransaction4tronbroadcast5
-BNB Smart Chain-Binance Smart Chain is an Ethereum EVM 100 compatible blockchain and is very good for decentralized application Dapp development within many possible verticals including DeFi NFT Gaming and many others
-Tatum supports 2 chains
-Mainnet  a regular live chain
-Testnet  a chain used for testing purposes Coins on the test chain have no value and can be obtained from
-a faucet eg https//testnetbinanceorg/faucetsmart
-77bscgeneratewallet0bscgenerateaddress1bscgenerateaddressprivatekey2bscgetcurrentblock3bscgetblock4bscgetbalance5bscgettransaction6bscgettransactioncount7bscblockchaintransfer8bscblockchainsmartcontractinvocation9bscbroadcast10
-KuCoin-Kcs KCS is an Ethereum EVM 100 compatible blockchain and is very good for decentralized application Dapp development within many possible verticals including DeFi NFT Gaming and many others
-Tatum supports 2 chains
-Mainnet  a regular live chain
-Mumbai Testnet  a chain used for testing purposes Coins on the test chain have no value and can be obtained from
-a faucet eg https//faucettestnetkccnetwork/
-78kcsgeneratewallet0kcsgenerateaddress1kcsgenerateaddressprivatekey2kcsgetcurrentblock3kcsgetblock4kcsgetbalance5kcsgettransaction6kcsgettransactioncount7kcsblockchaintransfer8kcsblockchainsmartcontractinvocation9kcsbroadcast10
-Harmony-HarmonyONE is an Oneeum L2 scaling solution 100 EVM compatible and is very good for decentralized application Dapp development within many possible verticals including DeFi NFT Gaming and many others
-Tatum supports 2 chains
-Mainnet  a regular live chain
-Testnet  a chain used for testing purposes Coins on the test chain have no value and can be obtained from
-a faucet eg https//faucetpopsone/
-79onegeneratewallet0onegenerateaddress1oneformataddress2onegenerateaddressprivatekey3onegetcurrentblock4onegetblock5onegetbalance6onegettransaction7onegettransactioncount8oneblockchaintransfer9oneblockchainsmartcontractinvocation10onebroadcast11
-XinFin-XDC Network XinFin is enterprise ready hybrid blockchain for global trade and finance combining the power of Public  Private blockchains with interoperable Smart Contracts
-
-Tatum supports 2 chains
-Mainnet  a regular live chain
-Testnet  a chain used for testing purposes Coins on the test chain have no value and can be obtained from
-a faucet eg https//apothemnetwork/#getTestXDC
-80xdcgeneratewallet0xdcgenerateaddress1xdcgenerateaddressprivatekey2xdcgetcurrentblock3xdcgetblock4xdcgetbalance5xdcgettransaction6xdcgettransactioncount7xdcblockchaintransfer8xdcblockchainsmartcontractinvocation9xdcbroadcast10
-Multi Tokens (ERC-1155 or compatible)-A Multi Token combines characteristics of fungible and nonfungible tokens A single Multi Token smart contract allows you to mint fungible nonfungible and semifungible tokens and process different types of the tokens in a single transaction Multi Tokens are described by the ERC1155 standard on the Ethereum blockchain or by the equivalent standard on the other blockchains
-Multi Tokens can be used for nearly any digital asset or good to ensure authenticity and scarcity for example
-
-Ingame assets Multi Tokens can be used to create unique collectibles in the form of characters weapons skins or other equipment Players can resell or trade assets directly as they choose and their authenticity is easily verifiable
-Music and other digital media Multi Tokens can be used to create rare and unique collectible digital releases Similarly Multi Tokens can be used to sell videos art or any other type of digital media Collectors can own digital originals of their favorite songs movies and so on
-Digital sports merchandise Trading cards memorabilia classic moments in sports history and oneofakind experiences can be sold as Multi Tokens
-
-Each Multi Tokenrelated API supports its own set of the blockchains The list of the supported blockchains is provided in the API description further in this section
-81deploymultitoken0
-82mintmultitoken0
-83mintmultitokenbatch0
-84burnmultitoken0
-85burnmultitokenbatch0
-86transfermultitoken0
-87transfermultitokenbatch0addmultitokenminter1
-88multitokengettransactionbyaddress0multitokengettransaction1multitokengetaddressbalance2multitokengetbalance3multitokengetbalancebatch4multitokengetmetadata5
-Fungible Tokens (ERC-20 or compatible)-Fungible tokens are interchangeable and are used as a blockchain representation of the currency Fungible tokens are described by the ERC20 standard on the Ethereum blockchain or by the equivalent standard on the other blockchains
-Each API related to fungible tokens supports its own set of the blockchains The list of the supported blockchains is provided in the operation description further in this section
-89erc20deploy0erc20mint1
-90erc20burn0
-91erc20approve0erc20transfer1erc20gettransactionbyaddress2erc20getbalance3erc20getbalanceaddress4
-NFT (ERC-721 or compatible)-NFT stands for NonFungible Token which means that each token is unique and irreplaceable NFTs are described by the ERC721 standard on the Ethereum blockchain or by the equivalent standard on the other blockchains
-NFTs can be used for nearly any digital asset or good to ensure authenticity and scarcity for example
-
-Ingame assets NFTs can be used to create unique collectibles in the form of characters weapons skins or other equipment Players can resell or trade assets directly as they choose and their authenticity is easily verifiable
-Music and other digital media NFTs can be used to create rare and unique collectible digital releases Similarly NFTs can be used to sell videos art or any other type of digital media Collectors can own digital originals of their favorite songs movies and so on
-Digital sports merchandise Trading cards memorabilia classic moments in sports history and oneofakind experiences can be sold as NFTs
-
-Each NFTrelated API its own set of the blockchains The list of the supported blockchains is provided in the API description further in this section
-92nftdeployerc7210
-93nftaddminter0nftminterc7211nfttransfererc7212nftmintmultipleerc7213nftburnerc7214nftverifyincollection5nftgettransactionbyaddress6nftgettransactionbytoken7nftgettransacterc7218nftgettokensbyaddresserc7219nftgettokensbycollectionerc72110nftgetbalanceerc72111
-94nftgetmetadataerc7210
-Data API-Tatum Data API is a comprehensive solution designed for developers to easily access onchain data such as token balances NFT owners and metadata all through a suite of userfriendly APIs
-With Tatum Data API developers can seamlessly integrate blockchain functionality into their applications enabling them to deliver innovative web3 solutions This powerful indexing solution supports multiple blockchains ensuring developers have access to the latest data across different networks
-Tatum Data API offers a reliable scalable and costeffective way for developers to access onchain data making it an essential tool for any blockchain project
-95getcollections0getmetadata1getbalances2getowners3checkowner4gettransactions5gettransactionsbyhash6getevents7getblocks8getlatestblock9gettokens10getutxosbyaddress11
+0Account
+createaccount0getaccounts1getaccountscount2createaccountbatch3getaccountsbycustomerid4getaccountbyaccountid5getaccountbalance6blockamount7deleteblockamount8getblockamount9getblockamountbyid10deleteallblockamount11
+1Algorand
+algorandgeneratewallet0algorandgenerateaddress1algorandgetbalance2algorandgetcurrentblock3algorandgetblock4algorandblockchaintransfer5algorandblockchainreceiveasset6algorandgettransaction7algorandbroadcast8
+2Auction
+generateauction0createauction1bidonauction2settleauction3cancelauction4approvenftauctionspending5getauction6getauctionfee7getauctionfeerecipient8
+3BNB Beacon Chain
+bnbgeneratewallet0bnbgetcurrentblock1bnbgetblock2bnbgetaccount3bnbgettransaction4bnbgettxbyaccount5bnbblockchaintransfer6bnbbroadcast7
+4BNB Smart Chain
+bscgeneratewallet0bscgenerateaddress1bscgenerateaddressprivatekey2bscgetcurrentblock3bscgetblock4bscgetbalance5bscgettransaction6bscgettransactioncount7bscblockchaintransfer8bscblockchainsmartcontractinvocation9bscbroadcast10
+5Bitcoin
+btcgeneratewallet0btcgenerateaddress1btcgenerateaddressprivatekey2btcgetblockchaininfo3btcgetblockhash4btcgetblock5btcgetbalanceofaddress6btcgetbalanceofaddressbatch7btcgettxbyaddress8btctransferblockchain9btcgetrawtransaction10btcgetutxo11btcgetmempool12btcbroadcast13
+6Bitcoin Cash
+bchgeneratewallet0bchgetblockchaininfo1bchgetblockhash2bchgetblock3bchgetrawtransaction4bchgettxbyaddress5bchgenerateaddress6bchgenerateaddressprivatekey7bchtransferblockchain8bchbroadcast9
+7Blockchain addresses
+generatedepositaddress0getalldepositaddresses1generatedepositaddressesbatch2addressexists3assignaddress4removeaddress5
+8Blockchain fees
+getblockchainfee0estimatefeeblockchain1bscestimategas2celoestimategas3egldestimategas4ethestimategas5ethestimategasbatch6oneestimategas7klaytnestimategas8kcsestimategas9polygonestimategas10xdcestimategas11vetestimategas12
+9Blockchain operations
+btctransfer0bchtransfer1ltctransfer2flowtransfer3dogetransfer4ethtransfer5polygontransfer6kcstransfer7ethtransfererc208ethdeployerc209bscorbeptransfer10bscdeploybep2011klaytransfer12klaydeployerc2013xdctransfer14xdcdeployerc2015onetransfer16onedeployhrm2017registererc20token18storetokenaddress19celoorerc20transfer20celodeployerc20ledger21kcsdeployerc20ledger22soltransfer23xlmtransfer24xlmassetoffchain25xrptransfer26xrpassetoffchain27bnbtransfer28bnbassetoffchain29adatransferoffchain30trontransferoffchain31createtrc32trondeploytrc33egldtransfer34algodeployerc20ledger35algotransfer36
+10Blockchain storage
+storelog0getlog1
+11Blockchain utils
+scgetcontractaddress0getauctionestimatedtime1
+12Cardano
+adagetblockchaininfo0adageneratewallet1adagenerateaddress2adagenerateaddressprivatekey3adagetblock4adagetrawtransaction5adagettxbyaddress6adagetutxobyaddress7adatransferblockchain8adabroadcast9adagetaccount10
+13Celo
+celogeneratewallet0celogenerateaddress1celogenerateaddressprivatekey2celogetcurrentblock3celogetblock4celogetbalance5celogettransactionbyaddress6celogettransaction7celogettransactioncount8celoblockchaintransfer9celoblockchainsmartcontractinvocation10celobroadcast11
+14Custodial managed wallets
+custodialcreatewallet0custodialgetwallets1custodialgetwallet2custodialdeletewallet3custodialtransfermanagedaddress4
+15Customer
+findallcustomers0getcustomerbyexternalorinternalid1
+16Data API
+getcollections0getmetadata1getbalances2getowners3checkowner4gettransactions5gettransactionsbyhash6getevents7getblocks8getlatestblock9gettokens10getutxosbyaddress11
+17Deposit
+getdeposits0getdepositscount1
+18Dogecoin
+dogegeneratewallet0dogegenerateaddress1dogegenerateaddressprivatekey2dogegetblockchaininfo3dogegetblockhash4dogegetblock5dogegetrawtransaction6dogegettxbyaddress7dogegetbalanceofaddress8dogegetbalanceofaddressbatch9dogegetmempool10dogegetutxo11dogetransferblockchain12dogebroadcast13
+19Elrond
+egldgeneratewallet0egldgenerateaddress1egldgenerateaddressprivatekey2egldgetcurrentblock3egldgetblock4egldgetbalance5egldgettransaction6egldgettransactionaddress7egldgettransactioncount8egldblockchaintransfer9egldbroadcast10
+20Ethereum
+ethgeneratewallet0ethgenerateaddress1ethgenerateaddressprivatekey2ethgetcurrentblock3ethgetblock4ethgetbalance5ethgettransaction6ethgettransactioncount7ethgettransactionbyaddress8ethblockchaintransfer9ethblockchainsmartcontractinvocation10ethgetinternaltransactionbyaddress11ethbroadcast12
+21Exchange rate
+getexchangerate0getexchangerates1
+22Flow
+flowgeneratewallet0flowgenerateaddress1flowgeneratepubkey2flowgeneratepubkeyprivatekey3flowgetblockchaininfo4flowgetblock5flowgetblockevents6flowgetrawtransaction7flowgetaccount8flowtransferblockchain9flowtransfercustomblockchain10flowcreateaddressfrompubkey11
+23Fungible Tokens (ERC-20 or compatible)
+erc20deploy0erc20mint1erc20burn2erc20approve3erc20transfer4erc20gettransactionbyaddress5erc20getbalance6erc20getbalanceaddress7
+24Gas pump
+precalculategaspumpaddresses0activategaspumpaddresses1activatednotactivatedgaspumpaddresses2gaspumpaddressesactivatedornot3transfercustodialwallet4transfercustodialwalletbatch5approvetransfercustodialwallet6
+25Harmony
+onegeneratewallet0onegenerateaddress1oneformataddress2onegenerateaddressprivatekey3onegetcurrentblock4onegetblock5onegetbalance6onegettransaction7onegettransactioncount8oneblockchaintransfer9oneblockchainsmartcontractinvocation10onebroadcast11
+26IPFS
+getipfsdata0storeipfs1
+27Key Management System
+getpendingtransactionstosign0receivependingtransactionstosign1getpendingtransactiontosign2deletependingtransactiontosign3
+28Klaytn
+klaytngeneratewallet0klaytngenerateaddress1klaytngenerateaddressprivatekey2klaytngetcurrentblock3klaytngetblock4klaytngetbalance5klaytngettransaction6klaytngettransactioncount7klaytnblockchaintransfer8klaytnblockchainsmartcontractinvocation9klaytnbroadcast10
+29KuCoin
+kcsgeneratewallet0kcsgenerateaddress1kcsgenerateaddressprivatekey2kcsgetcurrentblock3kcsgetblock4kcsgetbalance5kcsgettransaction6kcsgettransactioncount7kcsblockchaintransfer8kcsblockchainsmartcontractinvocation9kcsbroadcast10
+30Litecoin
+ltcgeneratewallet0ltcgetblockchaininfo1ltcgetblockhash2ltcgetblock3ltcgetrawtransaction4ltcgetmempool5ltcgettxbyaddress6ltcgetbalanceofaddress7ltcgetbalanceofaddressbatch8ltcgetutxo9ltcgenerateaddress10ltcgenerateaddressprivatekey11ltctransferblockchain12ltcbroadcast13
+31Malicious address
+checkmalicousaddress0
+32Marketplace
+generatemarketplace0sellassetonmarketplace1buyassetonmarketplace2cancelsellmarketplacelisting3getmarketplacelistings4getmarketplacelisting5getmarketplaceinfo6getmarketplacefee7getmarketplacefeerecipient8withdrawfeefrommarketplace9withdrawtreasuryfrommarketplace10
+33Multi Tokens (ERC-1155 or compatible)
+deploymultitoken0mintmultitoken1mintmultitokenbatch2burnmultitoken3burnmultitokenbatch4transfermultitoken5transfermultitokenbatch6addmultitokenminter7multitokengettransactionbyaddress8multitokengettransaction9multitokengetaddressbalance10multitokengetbalance11multitokengetbalancebatch12multitokengetmetadata13
+34NFT (ERC-721 or compatible)
+nftdeployerc7210nftaddminter1nftminterc7212nfttransfererc7213nftmintmultipleerc7214nftburnerc7215nftverifyincollection6nftgettransactionbyaddress7nftgettransactionbytoken8nftgettransacterc7219nftgettokensbyaddresserc72110nftgettokensbycollectionerc72111nftgetbalanceerc72112nftgetmetadataerc72113
+35Node RPC
+nodejsonpostrpcdriver0nodejsonrpcgetdriver1
+36Notification subscriptions
+createsubscription0getsubscriptions1disablewebhookhmac2getsubscriptionscount3deletesubscription4getsubscriptionreport5getallwebhooks6getallwebhookscount7
+37Order Book
+storetrade0chartrequest1gethistoricaltradesbody2getbuytradesbody3getselltradesbody4getmatchedtrades5gettradebyid6deletetrade7deleteaccounttrades8
+38Polygon
+polygongeneratewallet0polygongenerateaddress1polygongenerateaddressprivatekey2polygongetcurrentblock3polygongetblock4polygongetbalance5polygongettransaction6polygongettransactionbyaddress7polygongettransactioncount8polygonblockchaintransfer9polygonblockchainsmartcontractinvocation10polygonbroadcast11
+39Service utils
+getcredits0getversion1unfreezeapikey2
+40Solana
+solanageneratewallet0solanagetcurrentblock1solanagetblock2solanagetbalance3solanagettransaction4solanablockchaintransfer5solanabroadcastconfirm6
+41Stellar
+xlmwallet0xlmgetlastclosedledger1xlmgetledger2xlmgetledgertx3xlmgetfee4xlmgetaccounttx5xlmgettransaction6xlmgetaccountinfo7xlmtransferblockchain8xlmtrustlineblockchain9xlmbroadcast10
+42Transaction
+sendtransaction0sendtransactionbatch1gettransactionsbyaccountid2gettransactionsbycustomerid3gettransactions4gettransactionsbyreference5
+43Tron
+generatetronwallet0trongenerateaddress1trongenerateaddressprivatekey2trongetcurrentblock3trongetblock4trongetaccount5tronfreeze6tronunfreeze7tronaccounttx8tronaccounttx209trontransfer10trontransfertrc1011trontransfertrc2012troncreatetrc1013trontrc10detail14troncreatetrc2015trongettransaction16tronbroadcast17
+44VeChain
+vetgeneratewallet0vetgenerateaddress1vetgenerateaddressprivatekey2vetgetcurrentblock3vetgetblock4vetgetbalance5vetgetenergy6vetgettransaction7vetgettransactionreceipt8vetblockchaintransfer9vetbroadcast10
+45Virtual Currency
+createcurrency0getcurrency1
+46Virtual account blockchain fees
+offchainestimatefee0
+47Withdrawal
+storewithdrawal0getwithdrawals1cancelinprogresswithdrawal2broadcastblockchaintransaction3
+48XRP
+xrpwallet0xrpgetlastclosedledger1xrpgetfee2xrpgetaccounttx3xrpgetledger4xrpgettransaction5xrpgetaccountinfo6xrpgetaccountbalance7xrptransferblockchain8xrptrustlineblockchain9xrpaccountsettings10xrpbroadcast11
+49XinFin
+xdcgeneratewallet0xdcgenerateaddress1xdcgenerateaddressprivatekey2xdcgetcurrentblock3xdcgetblock4xdcgetbalance5xdcgettransaction6xdcgettransactioncount7xdcblockchaintransfer8xdcblockchainsmartcontractinvocation9xdcbroadcast10
