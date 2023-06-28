@@ -20,7 +20,11 @@ api_url_format = 'https://stackpath.dev/reference/{operationId}'
 # input_filepath = 'weather_dot_gov_swagger.json'
 # api_url_format = 'https://www.weather.gov/documentation/services-web-api#/default/{operationId}'
 
+# Create "balanced chunks" of documents consisting of multiple endpoints around the size of token_count_goal
 token_count_goal = 3000
+
+# Max token count for both document styles
+token_count_max = 4500
 
 # for any nested fields move them from the nested structure to the root aka flatten
 # Decide what fields you want to keep in the documents
@@ -68,13 +72,21 @@ def main():
         openapi_spec = json.load(f)
 
     # Create list of processed and parsed individual endpoints
-    endpoints_by_tag_metadata, tag_summary_dict = minify(openapi_spec)
+    endpoints_by_tag, endpoints_by_tag_metadata, server_url, tag_summary_dict = minify(openapi_spec)
 
+
+
+    # Combine endpoints in groups of tags of relatively the same size token count
+    docs = create_balanced_chunks(endpoints_by_tag, server_url)
+    # Rewrite to so there is only one version of this function
+    create_key_point_guide_for_chunks(docs, tag_summary_dict)
+    count_tokens_in_directory(f'{output_directory}/balanced_chunks')
+  
     endpoints_by_tag_metadata = create_endpoint_files(endpoints_by_tag_metadata)
-
     create_key_point_guide(endpoints_by_tag_metadata, tag_summary_dict)
-
     count_tokens_in_directory(f'{output_directory}')
+    # Create LLM OAS keypoint generator guide file 
+    # Need to add summaries 
     
 def minify(openapi_spec):
     
@@ -169,7 +181,7 @@ def minify(openapi_spec):
             tag_summary_dict[tag] = ""
 
     print(f'{endpoint_counter} endpoints found')
-    return endpoints_by_tag_metadata, tag_summary_dict
+    return endpoints_by_tag, endpoints_by_tag_metadata, server_url, tag_summary_dict
             
 def resolve_refs(openapi_spec, endpoint):
     if isinstance(endpoint, dict):
@@ -369,6 +381,135 @@ def create_endpoint_files(endpoints_by_tag_metadata):
         tag_counter += 1
 
     return endpoints_by_tag_metadata
+
+# If balanced_chunks is True
+def create_balanced_chunks(endpoints_by_tag, server_url):
+    # If output_directory exists, delete it.
+    root_output_directory = os.path.join(output_directory)
+    if os.path.exists(root_output_directory):
+        shutil.rmtree(root_output_directory)
+
+    # Create a subdirectory called 'endpoints' within the output directory
+    endpoints_directory = os.path.join(output_directory, 'balanced_chunks')
+    os.makedirs(endpoints_directory, exist_ok=True)
+
+    # Initialize tag and operationId counters
+    tag_counter = 0
+    docid_counter = 0
+
+    docs = []
+
+    endpoint_counter = 0
+    # Now, iterate over each unique tag
+    for tag, endpoints_with_tag in endpoints_by_tag.items():
+
+        endpoint_combos = distribute_endpoints(endpoints=endpoints_with_tag, tag=tag, goal_length=token_count_goal)
+        for combo in endpoint_combos:
+            # Creating a dictionary to hold the information of the combo.
+            doc = {"endpoints": []}
+            doc_context_string = ''
+            for endpoint in combo:
+                endpoint_counter += 1
+                # Adding each endpoint to the doc
+                doc["endpoints"].append(endpoint)
+            
+                formatted_text = write_dict_to_text(endpoint)
+                doc_context_string += f'{formatted_text}\n'
+
+            doc_context_token_count = tiktoken_len(doc_context_string)
+
+            metadata = {
+                'tag': tag,
+                'tag_number': tag_counter,
+                'doc_number': docid_counter,
+                'doc_url': f"{api_docs_base_url}{tag}",
+                'server_url': server_url,
+                'token_count': doc_context_token_count
+            }
+            doc['metadata'] = metadata
+
+            json_output = {
+                "metadata": metadata,
+                "doc_context": doc_context_string
+            }
+
+            # Create a file name 
+            file_name = f"{tag_counter}-{tag}-{docid_counter}-{doc_context_token_count}.json"
+            # Define the file path
+            file_path = os.path.join(endpoints_directory, file_name)
+
+            # Write the data to a JSON file
+            with open(file_path, 'w') as file:
+                json.dump(json_output, file)
+
+            docs.append(doc)
+            docid_counter += 1
+        tag_counter += 1
+    print(f'{endpoint_counter} endpoints added to docs')
+    return docs
+
+# Called by create_balanced_chunks to create chunks near token_count_goal
+def distribute_endpoints(endpoints, tag, goal_length, depth=0):
+    # Build initial combos
+    combos = []
+    current_combo = []
+    combo_token_count = 0
+    for index, endpoint in enumerate(endpoints):
+        endpoint_token_count= tiktoken_len(write_dict_to_text(endpoint))
+        # If too big, truncate operationid
+        if endpoint_token_count > token_count_max:
+            print(f'truncating: {endpoint["opid"]}\n token count: {endpoint_token_count}')
+            operation_id_url = f'endpoint spec too long. see {api_docs_base_url}{tag}/#operation/{endpoint["opid"]} for more info.'
+            truncated_endpoint = {
+                'path': endpoint['path'],
+                'opid': endpoint['opid'],
+                'sum': endpoint.get('sum', ''),
+                'message': operation_id_url
+            }
+            endpoints[index] = truncated_endpoint
+            endpoint = truncated_endpoint
+            endpoint_token_count = tiktoken_len(write_dict_to_text(endpoint))
+        if goal_length > (combo_token_count + endpoint_token_count):
+            current_combo.append(endpoint)
+            combo_token_count += endpoint_token_count
+            continue
+        # Past here we're creating new combo
+        if not current_combo:
+            # If current empty add endpoint to current, current to combos, and empty current
+            current_combo.append(endpoint)
+            combos.append(current_combo)
+            current_combo = []
+            combo_token_count = 0
+        else:
+            # If current combo exists append current combo to combos, clear current, and append endpoint to current
+            combos.append(current_combo)
+            current_combo = []
+            current_combo.append(endpoint)
+            combo_token_count = endpoint_token_count
+ 
+    # Catch last combo
+    if current_combo:
+        combos.append(current_combo)
+    
+    if depth >= 4:
+        # Return the combos as is, if maximum recursion depth is reached
+        return combos
+    
+    if len(combos) < 2:
+        return combos
+    
+    # Check if any individual combo's token count is below 65% of the goal_length
+    for combo in combos:
+        combo_token_counts = [tiktoken_len(write_dict_to_text(endpoint)) for endpoint in combo]
+        combo_token_count = sum(combo_token_counts)
+        if combo_token_count < goal_length * 0.75:
+            if goal_length > token_count_max:
+                return combos
+            # Increase the goal length by distributing the token count of the first undersized combo
+            new_goal_length = goal_length + (combo_token_count / (len(combos) - 1))
+            return distribute_endpoints(endpoints=endpoints, tag=tag, goal_length=new_goal_length, depth=depth + 1)
+
+    return combos
 
 def write_dict_to_text(data):
     def remove_html_tags_and_punctuation(input_str):
