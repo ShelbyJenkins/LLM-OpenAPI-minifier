@@ -5,7 +5,7 @@ from collections import defaultdict
 import string
 import re
 import shutil
-from urllib.parse import urlparse
+from textwrap import dedent
 
 tokenizer = tiktoken.encoding_for_model("text-embedding-ada-002")
 
@@ -14,17 +14,17 @@ output_directory = 'minified_openapi_docs'
 # input_filepath = 'tatum_swagger.json'
 # api_url_format = 'https://apidoc.tatum.io/tag/{tag}#operation/{operationId}'
 
-# input_filepath = 'stackpath_edge_compute_swagger.json'
-# api_url_format = 'https://stackpath.dev/reference/{operationId}'
+input_filepath = 'stackpath_edge_compute_swagger.json'
+api_url_format = 'https://stackpath.dev/reference/{operationId}'
 
-input_filepath = 'weather_dot_gov_swagger.json'
-api_url_format = 'https://www.weather.gov/documentation/services-web-api#/default/{operationId}'
-
-# By default it creates a document for each endpoint
+# input_filepath = 'weather_dot_gov_swagger.json'
+# api_url_format = 'https://www.weather.gov/documentation/services-web-api#/default/{operationId}'
 
 # Create "balanced chunks" of documents consisting of multiple endpoints around the size of token_count_goal
-balanced_chunks = False # Currently not working
 token_count_goal = 3000
+
+# Max token count for both document styles
+token_count_max = 4500
 
 # for any nested fields move them from the nested structure to the root aka flatten
 # Decide what fields you want to keep in the documents
@@ -41,7 +41,7 @@ keys_to_keep = {
     "enums": True,
     "nested_descriptions": False, 
     "examples": False, 
-    "tag_descriptions": True,
+    "tag_descriptions": False,
     "deprecated": False,
 }
 
@@ -72,21 +72,21 @@ def main():
         openapi_spec = json.load(f)
 
     # Create list of processed and parsed individual endpoints
-    endpoints_by_tag_metadata, tag_summary_dict = minify(openapi_spec)
+    endpoints_by_tag, endpoints_by_tag_metadata, server_url, tag_summary_dict = minify(openapi_spec)
 
-    # if balanced_chunks == True:
-    #     print("currently disabled")
-    #     continue
-    #     # Combine endpoints in groups of tags of relatively the same size token count
-    #     docs = create_balanced_chunks(endpoints_by_tag, server_url)
-    #     # Rewrite to so there is only one version of this function
-    #     create_key_point_guide_for_chunks(docs, tag_summary_dict)
-    #     count_tokens_in_directory(f'{output_directory}/balanced_chunks')
-    # else:
-    # default case
-    endpoints_by_tag_metadata, root_output_directory = create_endpoint_files(endpoints_by_tag_metadata, openapi_spec)
-    create_key_point_guide(endpoints_by_tag_metadata, tag_summary_dict, root_output_directory)
+
+
+    # Combine endpoints in groups of tags of relatively the same size token count
+    docs = create_balanced_chunks(endpoints_by_tag, server_url)
+    # Rewrite to so there is only one version of this function
+    create_key_point_guide_for_chunks(docs, tag_summary_dict)
+    count_tokens_in_directory(f'{output_directory}/balanced_chunks')
+  
+    endpoints_by_tag_metadata = create_endpoint_files(endpoints_by_tag_metadata)
+    create_key_point_guide(endpoints_by_tag_metadata, tag_summary_dict)
     count_tokens_in_directory(f'{output_directory}')
+    # Create LLM OAS keypoint generator guide file 
+    # Need to add summaries 
     
 def minify(openapi_spec):
     
@@ -181,7 +181,7 @@ def minify(openapi_spec):
             tag_summary_dict[tag] = ""
 
     print(f'{endpoint_counter} endpoints found')
-    return endpoints_by_tag_metadata, tag_summary_dict
+    return endpoints_by_tag, endpoints_by_tag_metadata, server_url, tag_summary_dict
             
 def resolve_refs(openapi_spec, endpoint):
     if isinstance(endpoint, dict):
@@ -345,48 +345,42 @@ def abbreviate(data, abbreviations):
         # Return data unchanged if it's not a dict, list or string
         return data
 
-def create_endpoint_files(endpoints_by_tag_metadata, openapi_spec):
-    
-    # Creates a directory named after the API url
-    server_url = openapi_spec['servers'][0]['url']  
-    parsed_url = urlparse(server_url)
+def create_endpoint_files(endpoints_by_tag_metadata):
+
     # If output_directory exists, delete it.
-    # If output_directory exists, delete it.
-    root_output_directory = os.path.join(output_directory, parsed_url.netloc)
+    root_output_directory = os.path.join(output_directory)
     if os.path.exists(root_output_directory):
         shutil.rmtree(root_output_directory)
 
     # Initialize tag and operationId counters
     tag_counter = 0
     
-    # Create a subdirectory for the operationIDs
-    operationIDs_directory = os.path.join(root_output_directory, 'operationIDs')
-    os.makedirs(operationIDs_directory, exist_ok=True)
 
-    operationID_counter = 0
-    
     # Now, iterate over each unique tag
     for tag, endpoints_with_tag in endpoints_by_tag_metadata.items():
-        tag_counter = 0
+        endpoint_counter = 0
+        # Create a subdirectory for the tag
+        tag_directory = os.path.join(output_directory, tag)
+        os.makedirs(tag_directory, exist_ok=True)
 
         for endpoint in endpoints_with_tag:
             endpoint['metadata']['tag_number'] = tag_counter
-            endpoint['metadata']['doc_number'] = operationID_counter
+            endpoint['metadata']['doc_number'] = endpoint_counter
    
             # Create a file name 
-            file_name = f"{tag}-{operationID_counter}.json"
+            file_name = f"{tag_counter}-{endpoint_counter}.json"
             # Define the file path
-            file_path = os.path.join(operationIDs_directory, file_name)
+            file_path = os.path.join(tag_directory, file_name)
 
             # Write the data to a JSON file
             with open(file_path, 'w') as file:
                 json.dump(endpoint, file)
 
-            operationID_counter += 1
+            endpoint_counter += 1
 
         tag_counter += 1
 
-    return endpoints_by_tag_metadata, root_output_directory
+    return endpoints_by_tag_metadata
 
 # If balanced_chunks is True
 def create_balanced_chunks(endpoints_by_tag, server_url):
@@ -562,13 +556,37 @@ def write_dict_to_text(data):
     # but filter out any empty strings before joining
     return '\n'.join(filter(lambda x: x.strip(), formatted_text_parts))
 
-def create_key_point_guide(endpoints_by_tag_metadata, tag_summary_dict, root_output_directory):
+def create_key_point_guide(endpoints_by_tag_metadata, tag_summary_dict):
     # Ensure output directory exists
-    os.makedirs(root_output_directory, exist_ok=True)
+    os.makedirs(output_directory, exist_ok=True)
     # Define output file path
-    output_file_path = os.path.join(root_output_directory, 'LLM_OAS_keypoint_guide_file.txt')
+    output_file_path = os.path.join(output_directory, 'LLM_OAS_keypoint_guide_file.txt')
 
-    output_string = ''
+    output_string = dedent('''\
+    dear agent,
+    the user has a query that can be answered with an openapi spec document
+    please use this llm parsable index of openapi spec documentation in the format:
+    {{tag_number}}{{tag}} {{tag_description}}
+    {{operationId}}{{doc_number}}{{operationId}}{{doc_number}}...
+    {{tag_number}}{{tag}}
+    ...
+
+    each operationId in has an associated doc_number 
+    using this index please return the most relevant operationIds
+    do so STRICTLY by specifying in the following format 
+    IMPORTANTLY REPLY ONLY with numbers and \\n characters:
+
+    {{tag_number}}
+    {{doc_number}}
+    {{doc_number}}
+    ...
+    \\n
+    {{tag_number}}
+    ...
+    thank you agent,
+    begin
+
+    ''')
 
     # Now, iterate over each unique tag
     for tag, endpoints_with_tag in endpoints_by_tag_metadata.items():
@@ -579,9 +597,9 @@ def create_key_point_guide(endpoints_by_tag_metadata, tag_summary_dict, root_out
         if keys_to_keep["tag_descriptions"] and tag_description is not None and tag_description != '':
             tag_description = tag_summary_dict.get(tag)
             tag_description = write_dict_to_text(tag_description)
-            tag_string = f'{tag} {tag_description}\n'
+            tag_string = f'{tag_number}{tag} {tag_description}\n'
         else:
-            tag_string = f'{tag}\n'
+            tag_string = f'{tag_number}{tag}\n'
 
         for endpoint in endpoints_with_tag:
             # tagtag_number-description\noperation_iddoc_numberoperation_iddoc_number\n
@@ -589,7 +607,7 @@ def create_key_point_guide(endpoints_by_tag_metadata, tag_summary_dict, root_out
             doc_number = metadata.get('doc_number', '')
             operation_id = metadata.get('operation_id', '')
 
-            tag_string += f'{operation_id}-{doc_number}!'
+            tag_string += f'{operation_id}{doc_number}'
 
         output_string += f'{tag_string}\n'
 

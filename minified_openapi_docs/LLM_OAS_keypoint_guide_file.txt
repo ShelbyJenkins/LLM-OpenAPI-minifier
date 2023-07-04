@@ -1,0 +1,35 @@
+dear agent,
+the user has a query that can be answered with an openapi spec document
+please use this llm parsable index of openapi spec documentation in the format:
+{{tag_number}}{{tag}} {{tag_description}}
+{{operationId}}{{doc_number}}{{operationId}}{{doc_number}}...
+{{tag_number}}{{tag}}
+...
+
+each operationId in has an associated doc_number 
+using this index please return the most relevant operationIds
+do so STRICTLY by specifying in the following format 
+IMPORTANTLY REPLY ONLY with numbers and \n characters:
+
+{{tag_number}}
+{{doc_number}}
+{{doc_number}}
+...
+\n
+{{tag_number}}
+...
+thank you agent,
+begin
+
+0Infrastructure
+getlocations0
+1Instance Logs
+getlogs0
+2Instances
+getworkloadinstances0getworkloadinstance1restartinstance2
+3Metrics
+getmetrics0
+4Virtual Machine Images
+getimages0getimagesforfamily1deleteimagesforfamily2createimage3updateimage4getimage5deleteimage6
+5Workloads
+getworkloads0createworkload1getworkload2deleteworkload3updateworkload4
