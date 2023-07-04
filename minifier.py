@@ -11,14 +11,14 @@ tokenizer = tiktoken.encoding_for_model("text-embedding-ada-002")
 
 output_directory = 'minified_openapi_docs'
 
-# input_filepath = 'tatum_swagger.json'
-# api_url_format = 'https://apidoc.tatum.io/tag/{tag}#operation/{operationId}'
+input_filepath = 'tatum_swagger.json'
+api_url_format = 'https://apidoc.tatum.io/tag/{tag}#operation/{operationId}'
 
 # input_filepath = 'stackpath_edge_compute_swagger.json'
 # api_url_format = 'https://stackpath.dev/reference/{operationId}'
 
-input_filepath = 'weather_dot_gov_swagger.json'
-api_url_format = 'https://www.weather.gov/documentation/services-web-api#/default/{operationId}'
+# input_filepath = 'weather_dot_gov_swagger.json'
+# api_url_format = 'https://www.weather.gov/documentation/services-web-api#/default/{operationId}'
 
 # By default it creates a document for each endpoint
 
