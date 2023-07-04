@@ -9,15 +9,15 @@ from urllib.parse import urlparse
 
 tokenizer = tiktoken.encoding_for_model("text-embedding-ada-002")
 
-output_directory = 'minified_openapi_docs'
+output_directory = 'minified_openAPI_specs'
 
-input_filepath = 'tatum_swagger.json'
+input_filepath = 'input_openAPI_specs/tatum_swagger.json'
 api_url_format = 'https://apidoc.tatum.io/tag/{tag}#operation/{operationId}'
 
-# input_filepath = 'stackpath_edge_compute_swagger.json'
+# input_filepath = 'input_openAPI_specs/stackpath_edge_compute_swagger.json'
 # api_url_format = 'https://stackpath.dev/reference/{operationId}'
 
-# input_filepath = 'weather_dot_gov_swagger.json'
+# input_filepath = 'input_openAPI_specs/weather_dot_gov_swagger.json'
 # api_url_format = 'https://www.weather.gov/documentation/services-web-api#/default/{operationId}'
 
 # By default it creates a document for each endpoint
@@ -41,7 +41,7 @@ keys_to_keep = {
     "enums": True,
     "nested_descriptions": False, 
     "examples": False, 
-    "tag_descriptions": True,
+    "tag_descriptions": False,
     "deprecated": False,
 }
 
@@ -579,9 +579,9 @@ def create_key_point_guide(endpoints_by_tag_metadata, tag_summary_dict, root_out
         if keys_to_keep["tag_descriptions"] and tag_description is not None and tag_description != '':
             tag_description = tag_summary_dict.get(tag)
             tag_description = write_dict_to_text(tag_description)
-            tag_string = f'{tag} {tag_description}\n'
+            tag_string = f'{tag}! {tag_description}!!\n'
         else:
-            tag_string = f'{tag}\n'
+            tag_string = f'{tag}!\n'
 
         for endpoint in endpoints_with_tag:
             # tagtag_number-description\noperation_iddoc_numberoperation_iddoc_number\n
@@ -592,54 +592,6 @@ def create_key_point_guide(endpoints_by_tag_metadata, tag_summary_dict, root_out
             tag_string += f'{operation_id}-{doc_number}!'
 
         output_string += f'{tag_string}\n'
-
-    print(f'keypoint file token count: {tiktoken_len(output_string)}')
-    # Write sorted info_strings to the output file
-    with open(output_file_path, 'w') as output_file:
-            output_file.write(output_string)
-
-# Rewrite to so there is only one version of this function
-def create_key_point_guide_for_chunks(docs, tag_summary_dict):
-
-    # Ensure output directory exists
-    os.makedirs(output_directory, exist_ok=True)
-    # Define output file path
-    output_file_path = os.path.join(output_directory, 'LLM_OAS_keypoint_guide_file.txt')
-
-    # List to hold the info_strings
-    docs_by_tag = {}
-    for doc in docs:
-        tag = doc.get('metadata').get('tag')
-        if tag:
-            if tag not in docs_by_tag:
-                docs_by_tag[tag] = []  # Initialize list for this tag
-            docs_by_tag[tag].append(doc)
-    
-    output_string = ''
-    for tag, tag_docs in docs_by_tag.items():
-            # If we're adding tag descriptions and they exist they're added here.
-            if keys_to_keep["tag_descriptions"]:
-                tag_description = tag_summary_dict.get(tag)
-                if tag_description is not None and tag_description != '':
-                    tag_description = write_dict_to_text(tag_description)
-                    tag_string = f'{tag}-{tag_description}\n'
-                else:
-                    tag_string = f'{tag}\n'
-            else:
-                tag_string = f'{tag}\n'
-            for doc in tag_docs:
-                # Extract the required information from the YAML file
-                metadata = doc.get('metadata', '')
-                doc_number = metadata.get('doc_number', '')
-                endpoints = doc.get('endpoints', [])
-                doc_string = f'{doc_number}'
-                operation_id_counter = 0
-                for endpoint in endpoints:
-                    op_id = endpoint.get('opid', '')
-                    doc_string += f'{op_id}{operation_id_counter}'
-                    operation_id_counter += 1
-                tag_string += f'{doc_string}\n'
-            output_string += f'{tag_string}'
 
     print(f'keypoint file token count: {tiktoken_len(output_string)}')
     # Write sorted info_strings to the output file
