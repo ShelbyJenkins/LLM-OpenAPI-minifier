@@ -20,13 +20,7 @@ api_url_format = 'https://stackpath.dev/reference/{operationId}'
 # input_filepath = 'input_openAPI_specs/weather_dot_gov_swagger.json'
 # api_url_format = 'https://www.weather.gov/documentation/services-web-api#/default/{operationId}'
 
-# By default it creates a document for each endpoint
 
-# Create "balanced chunks" of documents consisting of multiple endpoints around the size of token_count_goal
-balanced_chunks = False # Currently not working
-token_count_goal = 3000
-
-# for any nested fields move them from the nested structure to the root aka flatten
 # Decide what fields you want to keep in the documents
 keys_to_keep = { 
     # Root level keys to populate
@@ -38,10 +32,10 @@ keys_to_keep = {
     "endpoint_descriptions": True,
     "endpoint_summaries": True, 
     # Keys to exclude
-    "enums": True,
-    "nested_descriptions": False, 
+    "enums": False,
+    "nested_descriptions": True, 
     "examples": False, 
-    "tag_descriptions": False,
+    "tag_descriptions": True,
     "deprecated": False,
 }
 
@@ -64,6 +58,8 @@ key_abbreviations = {
     "array": "arr",
     "object": "obj"
 }
+
+key_abbreviations_enabled = False
 
 operationID_counter = 0
 
@@ -167,9 +163,10 @@ def minify(openapi_spec):
 
             # Flattens to remove nested objects where the dict has only one key
             extracted_endpoint_data = flatten_endpoint(extracted_endpoint_data)
-
-            # Replace common keys with abbreviations and sets all text to lower case
-            extracted_endpoint_data = abbreviate(extracted_endpoint_data, key_abbreviations)
+            
+            if key_abbreviations_enabled:
+                # Replace common keys with abbreviations and sets all text to lower case
+                extracted_endpoint_data = abbreviate(extracted_endpoint_data, key_abbreviations)
             
             # Get the tags of the current endpoint
             tags = endpoint.get('tags', [])
@@ -184,7 +181,7 @@ def minify(openapi_spec):
 
             api_url = api_url_format.format(tag=tag, operationId=operation_id)
 
-            context_string = write_dict_to_text(extracted_endpoint_data)
+            content_string = write_dict_to_text(extracted_endpoint_data)
             metadata = {
                 'tag': tag,
                 'tag_number': 0,
@@ -195,7 +192,7 @@ def minify(openapi_spec):
             }
             endpoint_dict = {
                 "metadata": metadata,
-                "context": context_string
+                "content": content_string
             }
 
             endpoints_by_tag_metadata[tag].append(endpoint_dict)
@@ -507,8 +504,8 @@ def count_tokens_in_directory(directory):
                 filepath = os.path.join(dirpath, filename)
                 with open(filepath, 'r') as file:
                     file_content = json.load(file)
-                    context_content = file_content.get("context", "")
-                    token_count = tiktoken_len(context_content)
+                    content = file_content.get("content", "")
+                    token_count = tiktoken_len(content)
                     token_counts.append(token_count)
                     if token_count > max_tokens:
                         max_tokens = token_count
